@@ -35,12 +35,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
   }
 
   try {
-    type StatusUpdateTx = {
-      order: { update: (args: { where: { id: string }; data: Record<string, unknown> }) => Promise<unknown> };
-      orderStatusHistory: { create: (args: { data: Record<string, unknown> }) => Promise<unknown> };
-    };
-
-    await prisma.$transaction(async (tx: StatusUpdateTx) => {
+    await prisma.$transaction(async (tx) => {
       await tx.order.update({
         where: { id },
         data: {

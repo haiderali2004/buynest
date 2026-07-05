@@ -38,14 +38,7 @@ export async function POST(request: Request) {
   // the box or not — there's nothing else for "default" to mean yet.
   const isDefault = existingCount === 0 || Boolean(input.isDefault);
 
-  type AddressTx = {
-    address: {
-      updateMany: (args: { where: Record<string, unknown>; data: Record<string, unknown> }) => Promise<unknown>;
-      create: (args: { data: Record<string, unknown> }) => Promise<{ id: string }>;
-    };
-  };
-
-  const address = await prisma.$transaction(async (tx: AddressTx) => {
+  const address = await prisma.$transaction(async (tx) => {
     if (isDefault) {
       await tx.address.updateMany({ where: { userId }, data: { isDefault: false } });
     }

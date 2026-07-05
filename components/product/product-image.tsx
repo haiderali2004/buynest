@@ -15,9 +15,14 @@ interface ProductImageProps {
 function ProductImage({ src, alt, className, sizes, priority }: ProductImageProps) {
   const [loaded, setLoaded] = React.useState(false);
 
-  React.useEffect(() => {
+  // Reset the fade-in when the image source changes. Adjusting state during
+  // render (instead of in an effect) avoids an extra commit + repaint — see
+  // https://react.dev/learn/you-might-not-need-an-effect#adjusting-some-state-when-a-prop-changes
+  const [prevSrc, setPrevSrc] = React.useState(src);
+  if (src !== prevSrc) {
+    setPrevSrc(src);
     setLoaded(false);
-  }, [src]);
+  }
 
   return (
     <>
@@ -37,7 +42,7 @@ function ProductImage({ src, alt, className, sizes, priority }: ProductImageProp
           loaded ? "opacity-0" : "opacity-100",
         )}
       >
-        <Image src="/logo%201.png" alt="" width={86} height={47} className="h-7.2 w-auto animate-breathe" />
+        <Image src="/logo-mark.png" alt="" width={86} height={47} className="h-7.2 w-auto animate-breathe" />
       </div>
     </>
   );

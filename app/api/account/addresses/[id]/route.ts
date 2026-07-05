@@ -35,19 +35,10 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
 
   const input = parsed.data;
 
-  type AddressTx = {
-    address: {
-      updateMany: (args: {
-        where: Record<string, unknown>;
-        data: Record<string, unknown>;
-      }) => Promise<{ count: number }>;
-    };
-  };
-
   // `updateMany` (not `update`) is used throughout so ownership — `id`
   // *and* `userId` together — is enforced inside the query itself, not as
   // a separate check that a race condition could slip past.
-  const result = await prisma.$transaction(async (tx: AddressTx) => {
+  const result = await prisma.$transaction(async (tx) => {
     if (input.isDefault) {
       await tx.address.updateMany({ where: { userId }, data: { isDefault: false } });
     }

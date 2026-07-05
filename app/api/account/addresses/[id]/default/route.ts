@@ -17,16 +17,7 @@ export async function PATCH(_request: Request, { params }: { params: Promise<{ i
 
   const { id } = await params;
 
-  type AddressTx = {
-    address: {
-      updateMany: (args: {
-        where: Record<string, unknown>;
-        data: Record<string, unknown>;
-      }) => Promise<{ count: number }>;
-    };
-  };
-
-  const result: { count: number } = await prisma.$transaction(async (tx: AddressTx) => {
+  const result: { count: number } = await prisma.$transaction(async (tx) => {
     await tx.address.updateMany({ where: { userId }, data: { isDefault: false } });
     return tx.address.updateMany({ where: { id, userId }, data: { isDefault: true } });
   });

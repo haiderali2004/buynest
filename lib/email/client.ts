@@ -1,11 +1,20 @@
 import { Resend } from "resend";
 import type { ReactElement } from "react";
 
-if (!process.env.RESEND_API_KEY) {
-  throw new Error("RESEND_API_KEY is not set.");
-}
+/**
+ * The Resend client is created lazily, on the first actual send — NOT at
+ * module load. Next.js imports every route file while building, so a
+ * module-scope check on RESEND_API_KEY would crash `next build` on any
+ * machine that doesn't have the key set, even though no email is being
+ * sent. Missing key at send time is logged, not thrown (see sendEmail).
+ */
+let resendClient: Resend | null = null;
 
-export const resend = new Resend(process.env.RESEND_API_KEY);
+function getResend(): Resend | null {
+  if (!process.env.RESEND_API_KEY) return null;
+  resendClient ??= new Resend(process.env.RESEND_API_KEY);
+  return resendClient;
+}
 
 /**
  * Resend requires sending from a domain you've verified in their
@@ -32,6 +41,12 @@ interface SendEmailInput {
  */
 export async function sendEmail(input: SendEmailInput): Promise<void> {
   try {
+    const resend = getResend();
+    if (!resend) {
+      console.error("[email] RESEND_API_KEY is not set — email not sent:", input.subject);
+      return;
+    }
+
     const { error } = await resend.emails.send({
       from: EMAIL_FROM,
       to: input.to,

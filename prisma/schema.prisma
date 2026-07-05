@@ -316,7 +316,11 @@ model Discount {
 
 model Order {
   id                  String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  orderNumber         String        @unique @map("order_number")
+  // Filled by the `generate_order_number` BEFORE INSERT trigger (see
+  // supabase/migrations/0001_init.sql) — dbgenerated() tells Prisma the
+  // value comes from the database so `create` doesn't require it. The
+  // expression string is documentation only; Supabase owns the DDL here.
+  orderNumber         String        @unique @default(dbgenerated("trigger: generate_order_number()")) @map("order_number")
   userId              String        @map("user_id") @db.Uuid
   status              OrderStatus   @default(pending)
   paymentStatus       PaymentStatus @default(unpaid) @map("payment_status")

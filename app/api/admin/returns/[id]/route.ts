@@ -64,28 +64,13 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
     return NextResponse.json({ message: "Return not found." }, { status: 404 });
   }
 
-  type ReturnTx = {
-    productVariant: {
-      update: (args: { where: { id: string }; data: Record<string, unknown> }) => Promise<unknown>;
-    };
-    returnItem: {
-      update: (args: { where: { id: string }; data: Record<string, unknown> }) => Promise<unknown>;
-    };
-    return: {
-      update: (args: { where: { id: string }; data: Record<string, unknown> }) => Promise<unknown>;
-    };
-    order: {
-      update: (args: { where: { id: string }; data: Record<string, unknown> }) => Promise<unknown>;
-    };
-  };
-
   let emailRefundAmount: number | null = null;
 
   try {
     if (input.status === "item_received") {
       // Restock every item in this return that hasn't already been
       // restocked — re-runnable safely if called twice.
-      await prisma.$transaction(async (tx: ReturnTx) => {
+      await prisma.$transaction(async (tx) => {
         for (const item of existing.items) {
           if (item.restocked) continue;
           await tx.productVariant.update({
@@ -119,7 +104,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
       // sandbox/production account.
       const refundResult = await refundPayment(existing.order.safepayTrackerToken, refundAmount);
 
-      await prisma.$transaction(async (tx: ReturnTx) => {
+      await prisma.$transaction(async (tx) => {
         await tx.return.update({
           where: { id },
           data: {

@@ -59,7 +59,7 @@ function AdminSidebar() {
       {/* Mobile top bar — the desktop sidebar below is hidden at this breakpoint */}
       <div className="flex h-16 items-center justify-between border-b border-border bg-paper px-4 lg:hidden">
         <Link href="/admin" className="flex items-center gap-2">
-          <Image src="/logo%201.png" alt="BuyNest" width={99} height={54} className="h-8.75 w-auto shrink-0" />
+          <Image src="/logo-mark.png" alt="BuyNest" width={99} height={54} className="h-8.75 w-auto shrink-0" />
           <span className="font-mono text-xs text-muted-foreground">Admin Panel</span>
         </Link>
         <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
@@ -74,7 +74,7 @@ function AdminSidebar() {
           </SheetTrigger>
           <SheetContent side="left" className="w-64 p-0">
             <div className="flex h-16 items-center gap-2 border-b border-border px-6">
-              <Image src="/logo%201.png" alt="BuyNest" width={99} height={54} className="h-8.75 w-auto shrink-0" />
+              <Image src="/logo-mark.png" alt="BuyNest" width={99} height={54} className="h-8.75 w-auto shrink-0" />
               <span className="font-mono text-xs text-muted-foreground">Admin Panel</span>
             </div>
             <NavLinks pathname={pathname} onNavigate={() => setMobileOpen(false)} />
@@ -86,7 +86,7 @@ function AdminSidebar() {
       <aside className="hidden w-60 shrink-0 border-r border-border bg-paper lg:block">
         <div className="flex h-16 items-center border-b border-border px-6">
           <Link href="/admin" className="flex items-center gap-2">
-            <Image src="/logo%201.png" alt="BuyNest" width={99} height={54} className="h-8.75 w-auto shrink-0" />
+            <Image src="/logo-mark.png" alt="BuyNest" width={99} height={54} className="h-8.75 w-auto shrink-0" />
             <span className="font-mono text-xs text-muted-foreground">Admin Panel</span>
           </Link>
         </div>

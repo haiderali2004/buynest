@@ -92,21 +92,8 @@ export async function POST(request: Request) {
     const billing = input.billingSameAsShipping ? input.shippingAddress : input.billingAddress!;
     const reservationExpiresAt = new Date(Date.now() + 30 * 60 * 1000);
 
-    type CheckoutTx = {
-      address: { create: (args: { data: Record<string, unknown> }) => Promise<{ id: string }> };
-      order: {
-        create: (args: {
-          data: Record<string, unknown>;
-          select?: Record<string, unknown>;
-        }) => Promise<{ id: string; orderNumber: string }>;
-      };
-      orderItem: { createMany: (args: { data: Record<string, unknown>[] }) => Promise<unknown> };
-      orderStatusHistory: { create: (args: { data: Record<string, unknown> }) => Promise<unknown> };
-      $executeRaw: (query: TemplateStringsArray, ...values: unknown[]) => Promise<number>;
-    };
-
     const order: { id: string; orderNumber: string } = await prisma.$transaction(
-      async (tx: CheckoutTx) => {
+      async (tx) => {
         const shippingAddress = await tx.address.create({
           data: { userId, ...toAddressRow(input.shippingAddress) },
         });

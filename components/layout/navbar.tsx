@@ -30,9 +30,11 @@ function Navbar({ user, categories }: NavbarProps) {
     const hero = document.getElementById("hero");
 
     if (!hero) {
-      // No hero on this page — always show solid navbar
-      setScrolled(true);
-      return;
+      // No hero on this page — always show solid navbar. Deferred to the
+      // next frame so we never setState synchronously inside the effect
+      // body (avoids a cascading render before first paint).
+      const frame = requestAnimationFrame(() => setScrolled(true));
+      return () => cancelAnimationFrame(frame);
     }
 
     const observer = new IntersectionObserver(

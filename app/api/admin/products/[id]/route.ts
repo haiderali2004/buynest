@@ -35,19 +35,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
   const newVariants = input.variants.filter((variant) => !variant.id);
 
   try {
-    type AdminProductTx = {
-      product: { update: (args: { where: { id: string }; data: Record<string, unknown> }) => Promise<unknown> };
-      productVariant: {
-        update: (args: { where: { id: string }; data: Record<string, unknown> }) => Promise<unknown>;
-        createMany: (args: { data: Record<string, unknown>[] }) => Promise<unknown>;
-      };
-      productImage: {
-        deleteMany: (args: { where: Record<string, unknown> }) => Promise<unknown>;
-        createMany: (args: { data: Record<string, unknown>[] }) => Promise<unknown>;
-      };
-    };
-
-    await prisma.$transaction(async (tx: AdminProductTx) => {
+    await prisma.$transaction(async (tx) => {
       await tx.product.update({
         where: { id },
         data: {

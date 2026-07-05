@@ -59,14 +59,7 @@ export async function finalizeSucceededPayment(
   if (!order) return { status: "not_found" };
   if (order.paymentStatus === "paid") return { status: "already_finalized", orderId: order.id };
 
-  type FinalizeTx = {
-    order: { update: (args: { where: { id: string }; data: Record<string, unknown> }) => Promise<unknown> };
-    paymentTransaction: { create: (args: { data: Record<string, unknown> }) => Promise<unknown> };
-    orderStatusHistory: { create: (args: { data: Record<string, unknown> }) => Promise<unknown> };
-    discount: { update: (args: { where: { id: string }; data: Record<string, unknown> }) => Promise<unknown> };
-  };
-
-  await prisma.$transaction(async (tx: FinalizeTx) => {
+  await prisma.$transaction(async (tx) => {
     await tx.order.update({
       where: { id: order.id },
       data: { status: "paid", paymentStatus: "paid", reservationExpiresAt: null },
@@ -141,13 +134,7 @@ export async function recordFailedPayment(input: {
 
   if (!order || order.paymentStatus === "paid") return;
 
-  type FailTx = {
-    order: { update: (args: { where: { id: string }; data: Record<string, unknown> }) => Promise<unknown> };
-    orderStatusHistory: { create: (args: { data: Record<string, unknown> }) => Promise<unknown> };
-    $executeRaw: (query: TemplateStringsArray, ...values: unknown[]) => Promise<number>;
-  };
-
-  await prisma.$transaction(async (tx: FailTx) => {
+  await prisma.$transaction(async (tx) => {
     await tx.order.update({
       where: { id: order.id },
       data: { status: "cancelled", paymentStatus: "failed", reservationExpiresAt: null },
