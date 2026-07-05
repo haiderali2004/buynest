@@ -1,0 +1,28 @@
+<svg viewBox="0 0 600 800" xmlns="http://www.w3.org/2000/svg">
+  <rect width="600" height="800" fill="#F0ECE3"/>
+  <rect x="24" y="24" width="552" height="752" fill="none" stroke="#D9D2C3" stroke-width="1"/>
+  <path d="M 265 135 C 265 118, 335 118, 335 135 C 335 152, 318 158, 300 158 C 282 158, 265 152, 265 135 Z"
+        fill="none" stroke="#1C1B17" stroke-width="3"/>
+  <path d="M 218 158
+           C 194 158, 176 190, 176 226
+           L 166 606
+           C 166 652, 200 678, 242 678
+           L 358 678
+           C 400 678, 434 652, 434 606
+           L 424 226
+           C 424 190, 406 158, 382 158
+           L 335 135 C 335 152, 318 158, 300 158 C 282 158, 265 152, 265 135 Z"
+        fill="#F7F4ED" stroke="#1C1B17" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M 176 226 L 74 264 L 62 436 L 150 450 L 166 290 Z" fill="#F7F4ED" stroke="#1C1B17" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M 424 226 L 526 264 L 538 436 L 450 450 L 434 290 Z" fill="#F7F4ED" stroke="#1C1B17" stroke-width="3" stroke-linejoin="round"/>
+  <g stroke="#24433A" stroke-width="1.5" opacity="0.55">
+    <line x1="190" y1="260" x2="412" y2="260"/>
+    <line x1="184" y1="320" x2="418" y2="320"/>
+    <line x1="178" y1="380" x2="424" y2="380"/>
+    <line x1="174" y1="440" x2="428" y2="440"/>
+    <line x1="170" y1="500" x2="431" y2="500"/>
+    <line x1="168" y1="560" x2="433" y2="560"/>
+    <line x1="167" y1="620" x2="434" y2="620"/>
+  </g>
+  <text x="300" y="752" text-anchor="middle" font-family="ui-monospace, monospace" font-size="13" letter-spacing="2" fill="#6B6555">BUYNEST — SWEATER</text>
+</svg>

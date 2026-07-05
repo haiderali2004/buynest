@@ -1,0 +1,185 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+/* ===========================================================
+   BuyNest design tokens — "Spec Sheet" system
+   Grounded in tailoring/garment-construction materials:
+   pattern paper, hang tags, stitched seams, brass hardware.
+   =========================================================== */
+
+:root {
+  /* --- Brand palette (raw values) --- */
+  --canvas: #f0ece3; /* unbleached pattern-cloth background */
+  --paper: #f7f4ed; /* card / surface, a shade lighter than canvas */
+  --paper-dim: color-mix(in srgb, var(--paper) 80%, black); /* paper, 20% darker — for fields sitting on a paper card */
+  --ink: #1c1b17; /* warm near-black for text */
+  --ink-muted: #6b6555; /* secondary text, warm grey */
+  --bottle: #24433a; /* deep bottle green — primary brand accent */
+  --bottle-hover: #1b332c;
+  --brass: #b8893e; /* brass hardware — secondary accent */
+  --clay: #92402f; /* sale / destructive accent, used sparingly */
+  --line: #d9d2c3; /* hairline borders, warm taupe */
+  --line-strong: #c7bea8;
+
+  /* --- Semantic tokens (shadcn-style slots) --- */
+  --background: var(--canvas);
+  --foreground: var(--ink);
+
+  --card: var(--paper);
+  --card-foreground: var(--ink);
+
+  --popover: var(--paper);
+  --popover-foreground: var(--ink);
+
+  --primary: var(--bottle);
+  --primary-foreground: var(--paper);
+
+  --secondary: #e6e1d4;
+  --secondary-foreground: var(--ink);
+
+  --muted: #e6e1d4;
+  --muted-foreground: var(--ink-muted);
+
+  --accent: var(--brass);
+  --accent-foreground: var(--ink);
+
+  --destructive: var(--clay);
+  --destructive-foreground: var(--paper);
+
+  --border: var(--line);
+  --input: var(--line);
+  --ring: var(--bottle);
+
+  --radius: 0rem;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-canvas: var(--canvas);
+  --color-paper: var(--paper);
+  --color-paper-dim: var(--paper-dim);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-bottle: var(--bottle);
+  --color-bottle-hover: var(--bottle-hover);
+  --color-brass: var(--brass);
+  --color-clay: var(--clay);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --radius-sm: calc(var(--radius) - 0.25rem);
+  --radius-md: calc(var(--radius) - 0.125rem);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 0.25rem);
+
+  --font-display: var(--font-eb-garamond), ui-serif, Georgia, serif;
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, "SF Mono", monospace;
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+    outline-color: color-mix(in oklab, var(--color-ring) 50%, transparent);
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+  }
+
+  /* Visible keyboard focus everywhere, no exceptions */
+  :focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer utilities {
+  /* Stitched-seam hairline — a dashed rule evoking a sewn edge, used
+     above/below the nav and footer instead of a plain solid border. */
+  .seam-line {
+    background-image: repeating-linear-gradient(
+      to right,
+      var(--color-line-strong) 0,
+      var(--color-line-strong) 6px,
+      transparent 6px,
+      transparent 12px
+    );
+    height: 1px;
+  }
+
+  /* Woven-canvas texture — a faint crosshatch plus grain over a solid
+     colour, standing in for the pattern-cloth backgrounds elsewhere. */
+  .bg-canvas-weave {
+    background-color: var(--bottle);
+    background-image:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E"),
+      repeating-linear-gradient(
+        45deg,
+        rgba(255, 255, 255, 0.035) 0,
+        rgba(255, 255, 255, 0.035) 1px,
+        transparent 1px,
+        transparent 9px
+      ),
+      repeating-linear-gradient(
+        -45deg,
+        rgba(0, 0, 0, 0.04) 0,
+        rgba(0, 0, 0, 0.04) 1px,
+        transparent 1px,
+        transparent 9px
+      );
+  }
+
+  /* Slow, deep fade — used on the product-image loading mark instead of
+     Tailwind's default animate-pulse, which is quicker and more subtle. */
+  .animate-breathe {
+    animation: breathe 2.2s ease-in-out infinite;
+  }
+
+  @keyframes breathe {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.35;
+    }
+  }
+}

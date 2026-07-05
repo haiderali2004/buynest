@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 450 100">
+  <defs>
+    <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f5e080"/>
+      <stop offset="45%" stop-color="#d4a422"/>
+      <stop offset="100%" stop-color="#9a6012"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Gold house interior (drawn first, dark B outline overlays edges) -->
+  <!-- Upper section: triangular roof interior -->
+  <polygon points="50,22 65,46 18,46" fill="url(#gold)"/>
+  <!-- Lower section: rectangular walls/room interior -->
+  <rect x="18" y="46" width="47" height="30" fill="url(#gold)"/>
+
+  <!-- Dark B letterform -->
+  <!-- Left spine -->
+  <rect x="5" y="8" width="13" height="80" fill="#2c2c2c"/>
+  <!-- Top horizontal arm -->
+  <rect x="5" y="8" width="55" height="11" fill="#2c2c2c"/>
+  <!-- Bottom horizontal arm -->
+  <rect x="5" y="77" width="55" height="11" fill="#2c2c2c"/>
+  <!-- Upper right arc (top bump of B) -->
+  <path d="M 60 8 C 90 8 90 46 68 46" fill="none" stroke="#2c2c2c" stroke-width="9" stroke-linecap="round"/>
+  <!-- Lower right arc (bottom bump of B) -->
+  <path d="M 68 46 C 90 46 90 88 60 88" fill="none" stroke="#2c2c2c" stroke-width="9" stroke-linecap="round"/>
+  <!-- House roof lines (the triangular peak separating upper and lower sections) -->
+  <polyline points="18,46 50,22 65,46" fill="none" stroke="#2c2c2c" stroke-width="7" stroke-linejoin="miter" stroke-linecap="round"/>
+
+  <!-- BUYNEST wordmark -->
+  <text x="108" y="70"
+    font-family="'Arial Black', 'Helvetica Neue', Arial, sans-serif"
+    font-weight="900"
+    font-size="55"
+    fill="#2c2c2c"
+    letter-spacing="3">BUYNEST</text>
+
+  <!-- Tagline -->
+  <text x="115" y="88"
+    font-family="Arial, 'Helvetica Neue', Helvetica, sans-serif"
+    font-weight="400"
+    font-size="11"
+    fill="#999999"
+    letter-spacing="3">YOUR HOME FOR SMART SHOPPING</text>
+</svg>

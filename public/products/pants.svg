@@ -1,0 +1,26 @@
+<svg viewBox="0 0 600 800" xmlns="http://www.w3.org/2000/svg">
+  <rect width="600" height="800" fill="#F0ECE3"/>
+  <rect x="24" y="24" width="552" height="752" fill="none" stroke="#D9D2C3" stroke-width="1"/>
+  <path d="M 210 140
+           L 390 140
+           C 396 140, 400 146, 399 154
+           L 392 380
+           L 430 660
+           C 432 672, 424 682, 412 682
+           L 350 682
+           C 340 682, 332 674, 331 664
+           L 305 430
+           L 279 664
+           C 278 674, 270 682, 260 682
+           L 198 682
+           C 186 682, 178 672, 180 660
+           L 218 380
+           L 201 154
+           C 200 146, 204 140, 210 140 Z"
+        fill="#F7F4ED" stroke="#1C1B17" stroke-width="3" stroke-linejoin="round"/>
+  <line x1="210" y1="140" x2="390" y2="140" stroke="#24433A" stroke-width="2" stroke-dasharray="2 6" stroke-linecap="round"/>
+  <line x1="300" y1="150" x2="300" y2="230" stroke="#1C1B17" stroke-width="1.5" opacity="0.5"/>
+  <path d="M 246 168 L 246 200" stroke="#24433A" stroke-width="2"/>
+  <path d="M 354 168 L 354 200" stroke="#24433A" stroke-width="2"/>
+  <text x="300" y="752" text-anchor="middle" font-family="ui-monospace, monospace" font-size="13" letter-spacing="2" fill="#6B6555">BUYNEST — TROUSER</text>
+</svg>

@@ -1,0 +1,22 @@
+<svg viewBox="0 0 600 800" xmlns="http://www.w3.org/2000/svg">
+  <rect width="600" height="800" fill="#F0ECE3"/>
+  <rect x="24" y="24" width="552" height="752" fill="none" stroke="#D9D2C3" stroke-width="1"/>
+  <path d="M 240 120 L 300 100 L 360 120 L 392 152 L 340 168 L 300 145 L 260 168 L 208 152 Z"
+        fill="#F7F4ED" stroke="#1C1B17" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M 210 160
+           C 188 160, 170 192, 170 230
+           L 158 600
+           C 158 650, 194 678, 240 678
+           L 360 678
+           C 406 678, 442 650, 442 600
+           L 430 230
+           C 430 192, 412 160, 390 160
+           L 392 152 L 340 168 L 300 145 L 260 168 L 208 152 Z"
+        fill="#F7F4ED" stroke="#1C1B17" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M 170 230 L 62 274 L 48 452 L 142 466 L 158 296 Z" fill="#F7F4ED" stroke="#1C1B17" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M 430 230 L 538 274 L 552 452 L 458 466 L 442 296 Z" fill="#F7F4ED" stroke="#1C1B17" stroke-width="3" stroke-linejoin="round"/>
+  <line x1="300" y1="175" x2="300" y2="660" stroke="#24433A" stroke-width="2" stroke-dasharray="3 5"/>
+  <rect x="195" y="450" width="60" height="44" rx="2" fill="none" stroke="#1C1B17" stroke-width="2"/>
+  <rect x="345" y="450" width="60" height="44" rx="2" fill="none" stroke="#1C1B17" stroke-width="2"/>
+  <text x="300" y="752" text-anchor="middle" font-family="ui-monospace, monospace" font-size="13" letter-spacing="2" fill="#6B6555">BUYNEST — JACKET</text>
+</svg>
