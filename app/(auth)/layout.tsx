@@ -4,8 +4,8 @@ import Image from "next/image";
 
 export default function AuthLayout({ children }: { children: ReactNode }) {
   return (
-    <div className="bg-canvas-weave flex min-h-dvh flex-col items-center justify-center px-4 py-10">
-      <Link href="/" aria-label="BuyNest home" className="mb-6">
+    <div className="bg-canvas-weave flex min-h-dvh flex-col items-center justify-center px-4 py-6">
+      <Link href="/" aria-label="BuyNest home" className="mb-4">
         <Image
           src="/logo.png"
           alt="BuyNest"

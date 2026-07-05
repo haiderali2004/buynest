@@ -3,7 +3,7 @@
 import * as React from "react";
 import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
-import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 
@@ -48,9 +48,8 @@ function ChangePasswordForm() {
     <form onSubmit={handleSubmit} className="flex max-w-md flex-col gap-4">
       <div>
         <Label htmlFor="newPassword">New password</Label>
-        <Input
+        <PasswordInput
           id="newPassword"
-          type="password"
           required
           minLength={6}
           autoComplete="new-password"
@@ -61,9 +60,8 @@ function ChangePasswordForm() {
       </div>
       <div>
         <Label htmlFor="confirmPassword">Confirm new password</Label>
-        <Input
+        <PasswordInput
           id="confirmPassword"
-          type="password"
           required
           minLength={6}
           autoComplete="new-password"

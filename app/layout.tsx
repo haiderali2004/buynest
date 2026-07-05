@@ -39,7 +39,11 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className={`${ebGaramond.variable} ${manrope.variable} ${geistMono.variable}`}>
+    <html
+      lang="en"
+      data-scroll-behavior="smooth"
+      className={`${ebGaramond.variable} ${manrope.variable} ${geistMono.variable}`}
+    >
       <body className="bg-canvas font-sans text-foreground antialiased">
         {children}
         <Toaster />

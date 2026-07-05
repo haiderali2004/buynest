@@ -91,8 +91,8 @@ function Navbar({ user, categories }: NavbarProps) {
           <Image
             src="/logo.png"
             alt="BuyNest"
-            width={187}
-            height={68}
+            width={137}
+            height={75}
             priority
             className="h-18.75 w-auto"
           />

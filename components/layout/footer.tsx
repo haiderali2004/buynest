@@ -42,7 +42,7 @@ function Footer() {
             <Image
               src="/logo.png"
               alt="BuyNest"
-              width={160}
+              width={108}
               height={59}
               className="h-14.75 w-auto brightness-0 invert"
             />

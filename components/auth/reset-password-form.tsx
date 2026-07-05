@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
 import { resetPasswordSchema } from "@/lib/validations/auth";
-import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 
@@ -51,9 +51,8 @@ function ResetPasswordForm() {
     <form onSubmit={handleSubmit} className="flex flex-col gap-4 border border-border bg-paper p-8">
       <div>
         <Label htmlFor="password">New password</Label>
-        <Input
+        <PasswordInput
           id="password"
-          type="password"
           required
           minLength={6}
           autoComplete="new-password"
@@ -64,9 +63,8 @@ function ResetPasswordForm() {
       </div>
       <div>
         <Label htmlFor="confirmPassword">Confirm new password</Label>
-        <Input
+        <PasswordInput
           id="confirmPassword"
-          type="password"
           required
           minLength={6}
           autoComplete="new-password"
