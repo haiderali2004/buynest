@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { prisma } from "@/lib/prisma";
 import { AccountSidebar } from "@/components/account/account-sidebar";
+import { StorefrontLayout } from "@/components/layout/storefront-layout";
 
 export default async function AccountLayout({ children }: { children: ReactNode }) {
   const supabase = await createClient();
@@ -26,15 +27,17 @@ export default async function AccountLayout({ children }: { children: ReactNode 
   const firstName = (profile?.fullName ?? fallbackName)?.split(" ")[0];
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
-      <h1 className="font-display text-3xl text-foreground">
-        {firstName ? `Hi, ${firstName}` : "My Account"}
-      </h1>
+    <StorefrontLayout>
+      <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
+        <h1 className="font-display text-3xl text-foreground">
+          {firstName ? `Hi, ${firstName}` : "My Account"}
+        </h1>
 
-      <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-[220px_1fr]">
-        <AccountSidebar />
-        <div>{children}</div>
+        <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-[220px_1fr]">
+          <AccountSidebar />
+          <div>{children}</div>
+        </div>
       </div>
-    </div>
+    </StorefrontLayout>
   );
 }
