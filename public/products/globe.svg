@@ -1,0 +1,15 @@
+<svg viewBox="0 0 600 800" xmlns="http://www.w3.org/2000/svg">
+  <rect width="600" height="800" fill="#F0ECE3"/>
+  <rect x="24" y="24" width="552" height="752" fill="none" stroke="#D9D2C3" stroke-width="1"/>
+  <circle cx="300" cy="360" r="190" fill="#F7F4ED" stroke="#1C1B17" stroke-width="3"/>
+  <ellipse cx="300" cy="360" rx="190" ry="60" fill="none" stroke="#1C1B17" stroke-width="1.5" opacity="0.45"/>
+  <ellipse cx="300" cy="360" rx="90" ry="190" fill="none" stroke="#1C1B17" stroke-width="1.5" opacity="0.45"/>
+  <ellipse cx="300" cy="360" rx="190" ry="190" fill="none" stroke="#1C1B17" stroke-width="1.5" opacity="0.2"/>
+  <line x1="110" y1="360" x2="490" y2="360" stroke="#1C1B17" stroke-width="1.5" opacity="0.45"/>
+  <path d="M 230 250 C 260 260, 250 300, 220 310 C 260 320, 300 300, 320 330 C 340 360, 300 380, 340 400 C 370 415, 400 400, 410 430" fill="none" stroke="#24433A" stroke-width="6" stroke-linecap="round" opacity="0.85"/>
+  <path d="M 190 420 C 210 440, 250 440, 260 470 C 270 495, 230 500, 240 520" fill="none" stroke="#B8893E" stroke-width="6" stroke-linecap="round" opacity="0.85"/>
+  <path d="M 300 170 L 300 130" stroke="#1C1B17" stroke-width="6" stroke-linecap="round"/>
+  <path d="M 230 640 L 370 640 L 340 690 L 260 690 Z" fill="#F7F4ED" stroke="#1C1B17" stroke-width="3" stroke-linejoin="round"/>
+  <line x1="300" y1="550" x2="300" y2="640" stroke="#1C1B17" stroke-width="6"/>
+  <text x="300" y="752" text-anchor="middle" font-family="ui-monospace, monospace" font-size="13" letter-spacing="2" fill="#6B6555">BUYNEST — EDUCATIONAL MODELS</text>
+</svg>

@@ -78,8 +78,8 @@ export default function TermsOfServicePage() {
         <section>
           <h2 className="font-display text-lg text-foreground">6. Returns and refunds</h2>
           <p className="mt-2">
-            You can request a return within 30 days of delivery for unworn items with tags
-            attached, from your account&rsquo;s order history. Once we&rsquo;ve received and
+            You can request a return within 30 days of delivery for unused items in their
+            original packaging, from your account&rsquo;s order history. Once we&rsquo;ve received and
             inspected a returned item, we&rsquo;ll process your refund to your original payment
             method. See our{" "}
             <Link href="/faq" className="text-bottle hover:underline">

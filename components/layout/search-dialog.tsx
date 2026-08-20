@@ -44,7 +44,7 @@ function SearchDialog({ open, onOpenChange, categories }: SearchDialogProps) {
           <Search className="size-4 shrink-0 text-muted-foreground" />
           <Input
             autoFocus
-            placeholder="Search for shirts, linen, outerwear…"
+            placeholder="Search for notebooks, pens, lab kits…"
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             className="border-0 px-0 shadow-none focus-visible:ring-0"

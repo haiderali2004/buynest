@@ -20,12 +20,17 @@ const FAQ_ITEMS = [
   {
     question: "What's your return policy?",
     answer:
-      "You can return anything within 30 days of delivery, as long as it's unworn with tags attached. Contact us with your order number and we'll send return instructions.",
+      "You can return anything within 30 days of delivery, as long as it's unused and in its original packaging. Contact us with your order number and we'll send return instructions.",
   },
   {
-    question: "How do I find my size?",
+    question: "How do I know which option to pick for a kit or set?",
     answer:
-      "Each product page lists the sizes currently in stock for that item. If a size you want shows as unavailable, it's sold out rather than hidden — we don't restock every style.",
+      "Each product page lists the sizes, pack counts, or kit levels currently in stock for that item. If an option shows as unavailable, it's sold out rather than hidden — we don't restock every variant.",
+  },
+  {
+    question: "Do you offer bulk pricing for schools or classrooms?",
+    answer:
+      "Yes — for classroom sets, school supply lists, or larger institutional orders, reach out through our contact page with quantities and we'll put together a quote.",
   },
   {
     question: "Is checkout secure?",

@@ -295,7 +295,7 @@ function ProductForm({ mode, productId, categories, initialValues }: ProductForm
           />
         </div>
         <div>
-          <Label htmlFor="care">Care instructions</Label>
+          <Label htmlFor="care">Usage &amp; care notes</Label>
           <Input
             id="care"
             value={careInstructions}

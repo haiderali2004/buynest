@@ -1,0 +1,18 @@
+<svg viewBox="0 0 600 800" xmlns="http://www.w3.org/2000/svg">
+  <rect width="600" height="800" fill="#F0ECE3"/>
+  <rect x="24" y="24" width="552" height="752" fill="none" stroke="#D9D2C3" stroke-width="1"/>
+  <rect x="270" y="140" width="60" height="140" fill="#F7F4ED" stroke="#1C1B17" stroke-width="3"/>
+  <path d="M 275 275
+           L 150 560
+           C 140 585, 158 610, 190 610
+           L 410 610
+           C 442 610, 460 585, 450 560
+           L 325 275 Z"
+        fill="#F7F4ED" stroke="#1C1B17" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M 190 480 C 240 460, 360 460, 410 480 L 410 560 C 410 578, 396 590, 378 590 L 222 590 C 204 590, 190 578, 190 560 Z" fill="#24433A" opacity="0.85"/>
+  <circle cx="240" cy="530" r="7" fill="#F0ECE3" opacity="0.7"/>
+  <circle cx="290" cy="500" r="5" fill="#F0ECE3" opacity="0.7"/>
+  <circle cx="340" cy="545" r="6" fill="#F0ECE3" opacity="0.7"/>
+  <rect x="255" y="120" width="90" height="24" rx="3" fill="#1C1B17"/>
+  <text x="300" y="752" text-anchor="middle" font-family="ui-monospace, monospace" font-size="13" letter-spacing="2" fill="#6B6555">BUYNEST — SCIENCE &amp; LAB</text>
+</svg>

@@ -43,7 +43,7 @@ function EmailLayout({ previewText, children }: EmailLayoutProps) {
 
           <Hr style={{ borderColor: "#D9D2C3", margin: "32px 0 16px" }} />
           <Text style={{ fontSize: "12px", color: "#6B6555", margin: 0 }}>
-            BuyNest — considered clothing, cut for the long run.
+            BuyNest — supplies for curious minds.
           </Text>
         </Container>
       </Body>

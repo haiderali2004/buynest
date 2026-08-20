@@ -5,6 +5,9 @@ import "@/app/globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthListener } from "@/components/shared/auth-listener";
 import { PageViewTracker } from "@/components/shared/page-view-tracker";
+import { Preloader } from "@/components/shared/preloader";
+import { ScrollProgress } from "@/components/shared/scroll-progress";
+import { BackToTop } from "@/components/shared/back-to-top";
 
 const ebGaramond = EB_Garamond({
   subsets: ["latin"],
@@ -30,11 +33,11 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "BuyNest — Considered clothing, cut for the long run",
+    default: "BuyNest — Supplies for curious minds",
     template: "%s · BuyNest",
   },
   description:
-    "BuyNest is a premium clothing brand for people who buy fewer, better things — tailored shirts, outerwear, and essentials made to last.",
+    "BuyNest stocks notebooks, art and craft supplies, science kits, and educational tools for students, teachers, and makers who love to learn by doing.",
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
@@ -45,7 +48,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       className={`${ebGaramond.variable} ${manrope.variable} ${geistMono.variable}`}
     >
       <body className="bg-canvas font-sans text-foreground antialiased">
+        <Preloader />
+        <ScrollProgress />
         {children}
+        <BackToTop />
         <Toaster />
         <AuthListener />
         <PageViewTracker />

@@ -19,6 +19,18 @@ interface NavbarProps {
   categories: NavCategory[];
 }
 
+// Category names are deliberately descriptive on category pages, SEO
+// titles, and admin — but too long to sit side by side in one nav row
+// without wrapping. This trims them for the desktop nav only.
+const NAV_LABELS: Record<string, string> = {
+  "notebooks-paper": "Notebooks",
+  "pens-writing": "Pens",
+  "art-craft": "Craft",
+  "science-lab-kits": "Science",
+  "geometry-math": "Math",
+  "educational-models": "Models",
+};
+
 function Navbar({ user, categories }: NavbarProps) {
   const [scrolled, setScrolled] = React.useState(false);
   const [searchOpen, setSearchOpen] = React.useState(false);
@@ -110,13 +122,13 @@ function Navbar({ user, categories }: NavbarProps) {
               <Link
                 href={`/categories/${category.slug}`}
                 className={cn(
-                  "rounded-full px-3 py-1.5 text-sm font-medium tracking-wide transition-all duration-300",
+                  "whitespace-nowrap rounded-full px-3 py-1.5 text-sm font-medium tracking-wide transition-all duration-300",
                   transparent
                     ? "text-white/90 hover:bg-white/10 hover:text-white"
                     : "text-foreground hover:bg-secondary hover:text-bottle",
                 )}
               >
-                {category.name}
+                {NAV_LABELS[category.slug] ?? category.name}
               </Link>
 
               {category.children.length > 0 && activeMenu === category.id && (

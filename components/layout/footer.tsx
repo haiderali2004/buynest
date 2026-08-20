@@ -17,7 +17,7 @@ const FOOTER_COLUMNS = [
     links: [
       { label: "Contact Us", href: "/contact" },
       { label: "Shipping & Returns", href: "/faq#shipping" },
-      { label: "Size Guide", href: "/faq#sizing" },
+      { label: "Bulk & School Orders", href: "/contact" },
       { label: "Track an Order", href: "/account/orders" },
     ],
   },
@@ -47,8 +47,8 @@ function Footer() {
               className="h-14.75 w-auto brightness-0 invert"
             />
             <p className="mt-3 max-w-xs text-sm text-paper/70">
-              Considered clothing, cut for the long run. Join the list for early access to new
-              arrivals and seasonal restocks.
+              Supplies for curious minds. Join the list for early access to new arrivals and
+              seasonal restocks.
             </p>
             <div className="mt-5">
               <NewsletterForm />
@@ -62,7 +62,7 @@ function Footer() {
               </p>
               <ul className="mt-4 flex flex-col gap-2.5">
                 {column.links.map((link) => (
-                  <li key={link.href}>
+                  <li key={link.label}>
                     <Link
                       href={link.href}
                       className="text-sm text-paper/80 transition-colors hover:text-paper"

@@ -5,7 +5,7 @@ export const PRODUCTS_PAGE_SIZE = 12;
 
 const KNOWN_SIZE_ORDER = ["XS", "S", "M", "L", "XL", "XXL"];
 
-/** Sorts clothing sizes in wearable order (XS..XXL), falling back to numeric/alpha for things like waist sizes. */
+/** Sorts apparel-style sizes in order (XS..XXL) if present, falling back to numeric/alpha for things like pack counts. */
 function sortSizes(sizes: string[]): string[] {
   return [...sizes].sort((a, b) => {
     const ai = KNOWN_SIZE_ORDER.indexOf(a.toUpperCase());
@@ -209,6 +209,65 @@ export async function getFeaturedProducts(limit: number = 4): Promise<ProductCar
     reviewCount: product.reviewCount,
     image: product.images[0]?.url ?? null,
   }));
+}
+
+export interface SpotlightProduct {
+  id: string;
+  name: string;
+  slug: string;
+  basePrice: number;
+  categoryName: string | null;
+  material: string | null;
+  careInstructions: string | null;
+  image: string | null;
+}
+
+/** The newest active products, for the home page's "just arrived" spotlight. */
+export async function getSpotlightProducts(limit: number = 2): Promise<SpotlightProduct[]> {
+  const results: Array<{
+    id: string;
+    name: string;
+    slug: string;
+    basePrice: unknown;
+    material: string | null;
+    careInstructions: string | null;
+    category: { name: string } | null;
+    images: Array<{ url: string }>;
+  }> = await prisma.product.findMany({
+    where: { isActive: true },
+    orderBy: { createdAt: "desc" },
+    take: limit,
+    include: {
+      category: { select: { name: true } },
+      images: { where: { isPrimary: true }, take: 1 },
+    },
+  });
+
+  return results.map((product) => ({
+    id: product.id,
+    name: product.name,
+    slug: product.slug,
+    basePrice: toNumber(product.basePrice),
+    categoryName: product.category?.name ?? null,
+    material: product.material,
+    careInstructions: product.careInstructions,
+    image: product.images[0]?.url ?? null,
+  }));
+}
+
+export interface CatalogStats {
+  categoryCount: number;
+  productCount: number;
+}
+
+/** Live catalog counts for the home page's brand-story stats — real numbers, not placeholders. */
+export async function getCatalogStats(): Promise<CatalogStats> {
+  const [categoryCount, productCount] = await Promise.all([
+    prisma.category.count({ where: { isActive: true } }),
+    prisma.product.count({ where: { isActive: true } }),
+  ]);
+
+  return { categoryCount, productCount };
 }
 
 export interface CategoryWithCount {

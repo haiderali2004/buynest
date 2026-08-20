@@ -1,0 +1,12 @@
+<svg viewBox="0 0 600 800" xmlns="http://www.w3.org/2000/svg">
+  <rect width="600" height="800" fill="#F0ECE3"/>
+  <rect x="24" y="24" width="552" height="752" fill="none" stroke="#D9D2C3" stroke-width="1"/>
+  <circle cx="300" cy="200" r="20" fill="#F7F4ED" stroke="#1C1B17" stroke-width="3"/>
+  <line x1="300" y1="220" x2="200" y2="580" stroke="#1C1B17" stroke-width="8" stroke-linecap="round"/>
+  <line x1="300" y1="220" x2="410" y2="470" stroke="#1C1B17" stroke-width="8" stroke-linecap="round"/>
+  <line x1="410" y1="470" x2="440" y2="500" stroke="#B8893E" stroke-width="8" stroke-linecap="round"/>
+  <path d="M 190 590 L 210 570 L 200 605 Z" fill="#1C1B17"/>
+  <path d="M 150 600 A 150 150 0 0 1 450 600" fill="none" stroke="#24433A" stroke-width="3" stroke-dasharray="6 8"/>
+  <rect x="240" y="330" width="180" height="14" rx="3" fill="#F7F4ED" stroke="#1C1B17" stroke-width="2.5" transform="rotate(-18 330 337)"/>
+  <text x="300" y="752" text-anchor="middle" font-family="ui-monospace, monospace" font-size="13" letter-spacing="2" fill="#6B6555">BUYNEST — GEOMETRY &amp; MATH</text>
+</svg>

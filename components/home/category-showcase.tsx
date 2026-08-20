@@ -1,22 +1,25 @@
 import Link from "next/link";
 import Image from "next/image";
+import { Reveal, RevealStagger } from "@/components/shared/reveal";
 import type { CategoryWithCount } from "@/lib/products/queries";
 
 const CATEGORY_ICONS: Record<string, string> = {
-  shirts: "/products/shirt.svg",
-  hoodies: "/products/hoodie.svg",
-  pants: "/products/pants.svg",
-  outerwear: "/products/jacket.svg",
+  "notebooks-paper": "/products/notebook.svg",
+  "pens-writing": "/products/pen.svg",
+  "art-craft": "/products/art.svg",
+  "science-lab-kits": "/products/flask.svg",
+  "geometry-math": "/products/compass.svg",
+  "educational-models": "/products/globe.svg",
 };
 
-const DEFAULT_ICON = "/products/sweater.svg";
+const DEFAULT_ICON = "/products/notebook.svg";
 
 function CategoryShowcase({ categories }: { categories: CategoryWithCount[] }) {
   if (categories.length === 0) return null;
 
   return (
     <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-      <div className="flex items-baseline justify-between">
+      <Reveal className="flex items-baseline justify-between">
         <h2 className="font-display text-2xl text-foreground">Shop by Category</h2>
         <Link
           href="/products"
@@ -24,9 +27,9 @@ function CategoryShowcase({ categories }: { categories: CategoryWithCount[] }) {
         >
           View all →
         </Link>
-      </div>
+      </Reveal>
 
-      <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
+      <RevealStagger className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
         {categories.map((category, index) =>
           category.imageUrl ? (
             <Link
@@ -73,7 +76,7 @@ function CategoryShowcase({ categories }: { categories: CategoryWithCount[] }) {
             </Link>
           )
         )}
-      </div>
+      </RevealStagger>
     </section>
   );
 }

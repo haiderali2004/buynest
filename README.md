@@ -1,6 +1,6 @@
 # BuyNest
 
-A full-stack e-commerce store for premium clothing, built with Next.js 16. Customers can browse products, manage a cart and wishlist, check out with Safepay, track orders, and request returns — while admins manage products, categories, discounts, orders, and returns from a built-in dashboard.
+A full-stack e-commerce store for stationery, hobby, and scientific/educational supplies, built with Next.js 16. Customers can browse products, manage a cart and wishlist, check out with Safepay, track orders, and request returns — while admins manage products, categories, discounts, orders, and returns from a built-in dashboard.
 
 **Tech stack:** Next.js 16 (App Router, Turbopack) · React 19 · TypeScript · Tailwind CSS 4 · Supabase (Postgres, Auth, Storage) · Prisma · Safepay (payments) · Resend (transactional email) · Zustand · Vitest
 

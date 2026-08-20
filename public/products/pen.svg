@@ -1,0 +1,13 @@
+<svg viewBox="0 0 600 800" xmlns="http://www.w3.org/2000/svg">
+  <rect width="600" height="800" fill="#F0ECE3"/>
+  <rect x="24" y="24" width="552" height="752" fill="none" stroke="#D9D2C3" stroke-width="1"/>
+  <g transform="rotate(35 300 400)">
+    <rect x="270" y="140" width="60" height="360" rx="10" fill="#F7F4ED" stroke="#1C1B17" stroke-width="3"/>
+    <rect x="270" y="230" width="60" height="18" fill="#24433A"/>
+    <rect x="270" y="330" width="60" height="18" fill="#B8893E"/>
+    <path d="M 270 500 L 300 570 L 330 500 Z" fill="#1C1B17"/>
+    <rect x="282" y="120" width="36" height="30" rx="4" fill="#1C1B17"/>
+    <rect x="290" y="98" width="20" height="26" fill="#1C1B17"/>
+  </g>
+  <text x="300" y="752" text-anchor="middle" font-family="ui-monospace, monospace" font-size="13" letter-spacing="2" fill="#6B6555">BUYNEST — PEN</text>
+</svg>

@@ -9,8 +9,15 @@ function ProductCard({ product }: { product: ProductCardData }) {
   const onSale = product.compareAtPrice !== null && product.compareAtPrice > product.basePrice;
 
   return (
-    <Link href={`/products/${product.slug}`} className="group block">
+    <Link
+      href={`/products/${product.slug}`}
+      className="group block transition-transform duration-300 ease-out hover:-translate-y-1.5"
+    >
       <div className="relative aspect-3/4 overflow-hidden bg-secondary">
+        <span
+          aria-hidden="true"
+          className="absolute top-2 left-2 z-10 size-3.5 border-t-2 border-l-2 border-brass opacity-0 transition-opacity duration-300 group-hover:opacity-90"
+        />
         {product.image ? (
           <ProductImage
             src={product.image}
