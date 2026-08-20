@@ -84,9 +84,15 @@ export async function createCheckoutSession(
     entry_mode: "raw",
     currency: "PKR",
     amount: Math.round(input.amountPkr * 100), // smallest denomination (paisa)
+    // Safepay's session.setup endpoint rejects any metadata key it doesn't
+    // recognize with a generic "unsupported meta key" error (confirmed
+    // against their real sandbox) — order_id is the only one it accepts.
+    // The order number itself doesn't need to travel through Safepay at
+    // all: it's already stored on our own Order row, and the webhook/
+    // success-page flow matches back to it via the tracker token, not
+    // via this metadata.
     metadata: {
       order_id: input.orderId,
-      order_number: input.orderNumber,
     },
   });
 
