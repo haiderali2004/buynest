@@ -160,12 +160,21 @@ export async function POST(request: Request) {
     // never pays for), so no compensating rollback is needed.
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
+    // Deliberately no query string on these two URLs — Safepay's hosted
+    // checkout appends its own `?order_id=...&tracker=...` onto whatever
+    // redirect_url/cancel_url you give it, but does so with a plain string
+    // concat rather than a real URL merge. If our own URL already had a
+    // `?`, Safepay's redirect ends up with two `?`s in it (a genuinely
+    // invalid URL, confirmed against the real sandbox), and the extra
+    // params get mashed into the value of ours instead of parsing
+    // separately. The success page reads order_id/tracker from what
+    // Safepay appends instead, which uniquely identifies the order anyway.
     const session = await createCheckoutSession({
       amountPkr: totals.totalAmount,
       orderId: order.id,
       orderNumber: order.orderNumber,
-      returnUrl: `${siteUrl}/checkout/success?order=${order.orderNumber}`,
-      cancelUrl: `${siteUrl}/checkout?canceled=true`,
+      returnUrl: `${siteUrl}/checkout/success`,
+      cancelUrl: `${siteUrl}/checkout`,
     });
 
     await prisma.order.update({

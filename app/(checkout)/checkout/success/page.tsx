@@ -30,25 +30,45 @@ interface OrderForSuccess {
   }>;
 }
 
-async function getOrder(orderNumber: string): Promise<OrderForSuccess | null> {
-  return prisma.order.findUnique({
-    where: { orderNumber },
-    include: { items: true, shippingAddress: true },
-  });
+/**
+ * Looks up by whichever identifier Safepay's redirect actually gave us —
+ * order_id (our own Order.id, echoed back) is preferred since it's a
+ * direct primary-key lookup, with the tracker token as a fallback.
+ */
+async function getOrder(identifiers: {
+  orderId?: string;
+  tracker?: string;
+}): Promise<OrderForSuccess | null> {
+  if (identifiers.orderId) {
+    const order = await prisma.order.findUnique({
+      where: { id: identifiers.orderId },
+      include: { items: true, shippingAddress: true },
+    });
+    if (order) return order;
+  }
+
+  if (identifiers.tracker) {
+    return prisma.order.findFirst({
+      where: { safepayTrackerToken: identifiers.tracker },
+      include: { items: true, shippingAddress: true },
+    });
+  }
+
+  return null;
 }
 
 export default async function CheckoutSuccessPage({
   searchParams,
 }: {
-  searchParams: Promise<{ order?: string }>;
+  searchParams: Promise<{ order_id?: string; tracker?: string }>;
 }) {
-  const { order: orderNumber } = await searchParams;
+  const { order_id: orderId, tracker } = await searchParams;
 
-  if (!orderNumber) {
+  if (!orderId && !tracker) {
     notFound();
   }
 
-  let order = await getOrder(orderNumber);
+  let order = await getOrder({ orderId, tracker });
 
   if (!order) {
     notFound();
@@ -61,13 +81,13 @@ export default async function CheckoutSuccessPage({
   // idempotent, so this is safe to run even if the webhook fires a moment
   // later too.
   if (order.paymentStatus !== "paid" && order.safepayTrackerToken) {
-    const tracker = await fetchTrackerStatus(order.safepayTrackerToken);
-    if (tracker.isSucceeded) {
+    const trackerStatus = await fetchTrackerStatus(order.safepayTrackerToken);
+    if (trackerStatus.isSucceeded) {
       await finalizeSucceededPayment({
         trackerToken: order.safepayTrackerToken,
         amountPkr: Number(order.totalAmount),
       });
-      order = await getOrder(orderNumber);
+      order = await getOrder({ orderId, tracker });
     }
   }
 
