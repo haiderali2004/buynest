@@ -98,7 +98,7 @@ function Hero({ pinnedProducts = [] }: HeroProps) {
                 <span className="absolute -top-1.5 left-1/2 size-3 -translate-x-1/2 rounded-full bg-brass shadow" />
                 <span className="relative block aspect-4/3 w-full overflow-hidden bg-canvas">
                   {product.image && (
-                    <Image src={product.image} alt="" fill className="object-contain p-2" />
+                    <Image src={product.image} alt="" fill className="object-cover" />
                   )}
                 </span>
                 <span className="mt-2 flex items-baseline justify-between font-mono text-[11px] text-ink-muted">
