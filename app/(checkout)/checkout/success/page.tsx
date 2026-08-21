@@ -82,17 +82,15 @@ export default async function CheckoutSuccessPage({
   // later too.
   if (order.paymentStatus !== "paid" && order.safepayTrackerToken) {
     const trackerStatus = await fetchTrackerStatus(order.safepayTrackerToken);
-    // TEMPORARY: explicit try/catch + logging while diagnosing why orders
-    // aren't ending up "paid" despite Safepay confirming the charge
-    // succeeded — remove once confirmed.
-    console.log("[checkout-success] trackerStatus", JSON.stringify(trackerStatus));
     if (trackerStatus.isSucceeded) {
+      // A failure here shouldn't 500 the whole page — the customer still
+      // sees "confirming your payment" and the webhook gets another shot
+      // at finalizing it — but it should never fail silently.
       try {
-        const result = await finalizeSucceededPayment({
+        await finalizeSucceededPayment({
           trackerToken: order.safepayTrackerToken,
           amountPkr: Number(order.totalAmount),
         });
-        console.log("[checkout-success] finalize result", JSON.stringify(result));
       } catch (error) {
         console.error("[checkout-success] finalize threw", error);
       }

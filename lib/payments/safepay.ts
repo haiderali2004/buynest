@@ -139,13 +139,12 @@ export interface TrackerStatus {
  */
 export async function fetchTrackerStatus(trackerToken: string): Promise<TrackerStatus> {
   const response = await safepay.reporter.payments.fetch(trackerToken);
-  const state: unknown = response?.data?.tracker?.state;
-
-  // TEMPORARY: the "TRACKER_ENDED" check below is an unverified guess —
-  // logging the raw response to see Safepay's actual state value for a
-  // real completed sandbox payment, since that's the only way to know
-  // the real value for certain. Remove once confirmed.
-  console.log("[safepay] tracker status raw response", JSON.stringify(response?.data));
+  // VERIFIED against a real sandbox payment: the state lives directly on
+  // `data` (data IS the tracker), not nested under a `data.tracker`
+  // property — the earlier `data.tracker.state` path always read
+  // undefined, so this always silently concluded "not succeeded" and
+  // skipped finalizing the order, even for genuinely successful payments.
+  const state: unknown = response?.data?.state;
 
   return {
     state: typeof state === "string" ? state : "UNKNOWN",
