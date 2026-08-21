@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Reveal, RevealStagger } from "@/components/shared/reveal";
+import { cn } from "@/lib/utils";
 import type { CategoryWithCount } from "@/lib/products/queries";
 
 const CATEGORY_ICONS: Record<string, string> = {
@@ -13,6 +14,8 @@ const CATEGORY_ICONS: Record<string, string> = {
 };
 
 const DEFAULT_ICON = "/products/notebook.svg";
+
+const ROTATIONS = ["-rotate-2", "rotate-2", "-rotate-1", "rotate-1", "-rotate-2", "rotate-2"];
 
 function CategoryShowcase({ categories }: { categories: CategoryWithCount[] }) {
   if (categories.length === 0) return null;
@@ -29,53 +32,47 @@ function CategoryShowcase({ categories }: { categories: CategoryWithCount[] }) {
         </Link>
       </Reveal>
 
-      <RevealStagger className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
-        {categories.map((category, index) =>
-          category.imageUrl ? (
-            <Link
-              key={category.slug}
-              href={`/categories/${category.slug}`}
-              className="group relative block aspect-3/4 overflow-hidden"
-            >
+      <RevealStagger className="mt-10 grid grid-cols-2 gap-x-4 gap-y-10 sm:grid-cols-3 lg:grid-cols-6">
+        {categories.map((category, index) => (
+          <Link
+            key={category.slug}
+            href={`/categories/${category.slug}`}
+            className={cn(
+              "group relative block border border-line-strong bg-paper p-2.5 pb-4 shadow-[0_14px_30px_-14px_rgba(28,27,23,.3)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_40px_-16px_rgba(28,27,23,.4)]",
+              ROTATIONS[index % ROTATIONS.length],
+            )}
+          >
+            <span className="absolute -top-1.5 left-1/2 z-10 size-3 -translate-x-1/2 rounded-full bg-brass shadow" />
+
+            <span className="relative block aspect-square w-full overflow-hidden bg-canvas">
               <Image
-                src={category.imageUrl}
-                alt={category.name}
+                src={category.imageUrl ?? CATEGORY_ICONS[category.slug] ?? DEFAULT_ICON}
+                alt=""
                 fill
-                priority={index < 4}
-                className="object-cover transition-transform duration-500 group-hover:scale-105"
-                sizes="(min-width: 1024px) 25vw, 50vw"
+                priority={index < 6}
+                className={cn(
+                  "transition-transform duration-500 group-hover:scale-105",
+                  category.imageUrl ? "object-cover" : "object-contain p-6",
+                )}
+                sizes="(min-width: 1024px) 16vw, (min-width: 640px) 33vw, 50vw"
               />
-              <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/10 to-transparent" />
-              <div className="absolute bottom-0 left-0 p-4">
-                <p className="font-display text-lg text-white">{category.name}</p>
-                <p className="font-mono text-xs text-white/70">
-                  {category.productCount} item{category.productCount === 1 ? "" : "s"}
-                </p>
-              </div>
-            </Link>
-          ) : (
-            <Link
-              key={category.slug}
-              href={`/categories/${category.slug}`}
-              className="group flex flex-col items-center gap-3 border border-border bg-paper px-4 py-8 text-center transition-colors hover:border-bottle"
-            >
-              <div className="relative size-16">
-                <Image
-                  src={CATEGORY_ICONS[category.slug] ?? DEFAULT_ICON}
-                  alt=""
-                  fill
-                  className="object-contain transition-transform group-hover:scale-105"
-                />
-              </div>
+            </span>
+
+            <div className="mt-3 flex items-start justify-between gap-2">
               <div>
-                <p className="font-display text-base text-foreground">{category.name}</p>
-                <p className="font-mono text-xs text-muted-foreground">
-                  {category.productCount} item{category.productCount === 1 ? "" : "s"}
+                <span className="font-mono text-[10px] tracking-wider text-brass uppercase">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <p className="mt-0.5 font-display text-base leading-tight text-foreground">
+                  {category.name}
                 </p>
               </div>
-            </Link>
-          )
-        )}
+            </div>
+            <p className="mt-1 font-mono text-[11px] text-muted-foreground">
+              {category.productCount} item{category.productCount === 1 ? "" : "s"}
+            </p>
+          </Link>
+        ))}
       </RevealStagger>
     </section>
   );
