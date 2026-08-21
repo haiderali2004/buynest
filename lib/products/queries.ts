@@ -270,41 +270,6 @@ export async function getCatalogStats(): Promise<CatalogStats> {
   return { categoryCount, productCount };
 }
 
-export interface CategoryWithCount {
-  name: string;
-  slug: string;
-  imageUrl: string | null;
-  productCount: number;
-}
-
-/** Top-level categories with a live count of active products, for the home page category tiles. */
-export async function getCategoriesWithCounts(): Promise<CategoryWithCount[]> {
-  const categories: Array<{
-    name: string;
-    slug: string;
-    imageUrl: string | null;
-    _count: { products: number };
-  }> = await prisma.category.findMany({
-    where: { isActive: true, parentId: null },
-    orderBy: { displayOrder: "asc" },
-    select: {
-      name: true,
-      slug: true,
-      imageUrl: true,
-      _count: { select: { products: { where: { isActive: true } } } },
-    },
-  });
-
-  return categories
-    .map((category) => ({
-      name: category.name,
-      slug: category.slug,
-      imageUrl: category.imageUrl,
-      productCount: category._count.products,
-    }))
-    .filter((category) => category.productCount > 0);
-}
-
 export interface ProductFilterFacets {
   categories: Array<{ name: string; slug: string }>;
   sizes: string[];
