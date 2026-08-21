@@ -62,7 +62,7 @@ function OrdersTable({ orders }: { orders: AdminOrderListItem[] }) {
                 </Badge>
               </td>
               <td className="px-5 py-3 font-mono text-xs text-muted-foreground">
-                {order.createdAt.toLocaleDateString("en-PK")}
+                {order.createdAt.toLocaleString("en-PK")}
               </td>
               <td className="px-5 py-3 text-right font-mono text-foreground">
                 {formatPrice(order.totalAmount)}
