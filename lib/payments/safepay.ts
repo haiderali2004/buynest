@@ -141,6 +141,12 @@ export async function fetchTrackerStatus(trackerToken: string): Promise<TrackerS
   const response = await safepay.reporter.payments.fetch(trackerToken);
   const state: unknown = response?.data?.tracker?.state;
 
+  // TEMPORARY: the "TRACKER_ENDED" check below is an unverified guess —
+  // logging the raw response to see Safepay's actual state value for a
+  // real completed sandbox payment, since that's the only way to know
+  // the real value for certain. Remove once confirmed.
+  console.log("[safepay] tracker status raw response", JSON.stringify(response?.data));
+
   return {
     state: typeof state === "string" ? state : "UNKNOWN",
     isSucceeded: state === "TRACKER_ENDED",
