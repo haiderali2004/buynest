@@ -1,6 +1,5 @@
 import Link from "next/link";
 import Image from "next/image";
-import { NewsletterForm } from "@/components/layout/newsletter-form";
 
 const FOOTER_COLUMNS = [
   {
@@ -47,12 +46,9 @@ function Footer() {
               className="h-14.75 w-auto brightness-0 invert"
             />
             <p className="mt-3 max-w-xs text-sm text-paper/70">
-              Supplies for curious minds. Join the list for early access to new arrivals and
-              seasonal restocks.
+              Supplies for curious minds — notebooks, art supplies, lab kits, and learning tools
+              for students, teachers, and makers.
             </p>
-            <div className="mt-5">
-              <NewsletterForm />
-            </div>
           </div>
 
           {FOOTER_COLUMNS.map((column) => (
