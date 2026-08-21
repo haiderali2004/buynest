@@ -82,11 +82,20 @@ export default async function CheckoutSuccessPage({
   // later too.
   if (order.paymentStatus !== "paid" && order.safepayTrackerToken) {
     const trackerStatus = await fetchTrackerStatus(order.safepayTrackerToken);
+    // TEMPORARY: explicit try/catch + logging while diagnosing why orders
+    // aren't ending up "paid" despite Safepay confirming the charge
+    // succeeded — remove once confirmed.
+    console.log("[checkout-success] trackerStatus", JSON.stringify(trackerStatus));
     if (trackerStatus.isSucceeded) {
-      await finalizeSucceededPayment({
-        trackerToken: order.safepayTrackerToken,
-        amountPkr: Number(order.totalAmount),
-      });
+      try {
+        const result = await finalizeSucceededPayment({
+          trackerToken: order.safepayTrackerToken,
+          amountPkr: Number(order.totalAmount),
+        });
+        console.log("[checkout-success] finalize result", JSON.stringify(result));
+      } catch (error) {
+        console.error("[checkout-success] finalize threw", error);
+      }
       order = await getOrder({ orderId, tracker });
     }
   }
