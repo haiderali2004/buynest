@@ -27,71 +27,17 @@ function Hero({ pinnedProducts = [] }: HeroProps) {
 
   return (
     <section id="hero" className="relative -mt-16 min-h-[88vh] w-full overflow-hidden">
-      {/* Hero background — an illustrated desk scene rendered as inline SVG so it
-          scales losslessly to any viewport without shipping a raster asset */}
+      {/* Hero background */}
       <div className="absolute inset-0 bg-[#2c2318]" />
-      <svg
-        className="absolute inset-0 h-full w-full"
-        viewBox="0 0 1600 900"
-        preserveAspectRatio="xMidYMid slice"
-        aria-hidden="true"
-      >
-        <defs>
-          <linearGradient id="hero-bg" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#2c2318" />
-            <stop offset="55%" stopColor="#24332c" />
-            <stop offset="100%" stopColor="#1c2a24" />
-          </linearGradient>
-        </defs>
-        <rect width="1600" height="900" fill="url(#hero-bg)" />
-
-        <g opacity="0.5" stroke="#F0ECE3" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round">
-          {/* notebook */}
-          <g transform="translate(980,120) rotate(-8)">
-            <rect x="0" y="0" width="150" height="200" rx="6" />
-            <rect x="0" y="0" width="18" height="200" fill="#24433A" fillOpacity="0.6" />
-            <line x1="45" y1="55" x2="130" y2="55" opacity="0.6" />
-            <line x1="45" y1="90" x2="130" y2="90" opacity="0.6" />
-            <line x1="45" y1="125" x2="105" y2="125" opacity="0.6" />
-          </g>
-
-          {/* fountain pen */}
-          <g transform="translate(1230,300) rotate(35)">
-            <rect x="0" y="0" width="26" height="220" rx="8" />
-            <rect x="0" y="60" width="26" height="10" fill="#B8893E" fillOpacity="0.7" stroke="none" />
-            <path d="M 0 220 L 13 260 L 26 220 Z" fill="#F0ECE3" fillOpacity="0.2" />
-          </g>
-
-          {/* flask */}
-          <g transform="translate(1150,520)">
-            <rect x="24" y="0" width="34" height="60" />
-            <path d="M 24 60 L -30 190 C -40 212 -22 232 4 232 L 78 232 C 104 232 122 212 112 190 L 58 60 Z" />
-            <path d="M -14 150 C 20 138 60 138 96 150 L 112 190 C 122 212 104 232 78 232 L 4 232 C -22 232 -40 212 -30 190 Z" fill="#24433A" fillOpacity="0.55" stroke="none" />
-          </g>
-
-          {/* compass */}
-          <g transform="translate(140,560)">
-            <circle cx="0" cy="-70" r="14" />
-            <line x1="0" y1="-56" x2="-60" y2="180" />
-            <line x1="0" y1="-56" x2="60" y2="140" />
-          </g>
-
-          {/* globe */}
-          <g transform="translate(310,140)">
-            <circle cx="0" cy="0" r="70" />
-            <ellipse cx="0" cy="0" rx="70" ry="24" opacity="0.6" />
-            <ellipse cx="0" cy="0" rx="30" ry="70" opacity="0.6" />
-            <line x1="0" y1="72" x2="0" y2="112" />
-            <path d="M -40 112 L 40 112 L 26 140 L -26 140 Z" />
-          </g>
-
-          {/* pencil */}
-          <g transform="translate(60,260) rotate(-25)">
-            <rect x="0" y="0" width="18" height="150" />
-            <path d="M 0 150 L 9 180 L 18 150 Z" />
-          </g>
-        </g>
-      </svg>
+      <Image
+        src="/hero.png"
+        alt=""
+        fill
+        priority
+        className="object-cover object-center"
+        sizes="100vw"
+        quality={85}
+      />
 
       {/* Gradient — darkens the left side so white text stays legible
           over the illustration, fades out toward the right */}
@@ -139,7 +85,7 @@ function Hero({ pinnedProducts = [] }: HeroProps) {
 
         {/* Pinned product cards — desktop only, so the mobile hero stays uncluttered */}
         {pinnedProducts.length > 0 && (
-          <div className="relative hidden h-[420px] lg:block">
+          <div className="relative hidden h-105 lg:block">
             {pinnedProducts.slice(0, 3).map((product, index) => (
               <Link
                 key={product.id}
