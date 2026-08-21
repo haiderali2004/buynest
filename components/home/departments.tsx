@@ -8,21 +8,21 @@ const DEPARTMENTS = [
     name: "Stationery & Office",
     description: "Notebooks, pens, and paper — everything a desk needs to run smoothly.",
     href: "/categories/notebooks-paper",
-    image: "/products/notebook.svg",
+    image: "/departments/stationery.png",
   },
   {
     num: "02",
     name: "Craft & Hobby",
     description: "Paint, pencils, and materials for the things you make by hand.",
     href: "/categories/art-craft",
-    image: "/products/art.svg",
+    image: "/departments/craft.png",
   },
   {
     num: "03",
     name: "Science & Education",
     description: "Lab kits, models, and tools built for hands-on discovery.",
     href: "/categories/science-lab-kits",
-    image: "/products/flask.svg",
+    image: "/departments/science.png",
   },
 ];
 
