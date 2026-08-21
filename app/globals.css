@@ -194,31 +194,4 @@
     }
   }
 
-  /* Stroke draw-in used by the site preloader mark. */
-  @keyframes draw-house {
-    from {
-      stroke-dashoffset: 120;
-    }
-    to {
-      stroke-dashoffset: 0;
-    }
-  }
-
-  @keyframes draw-nest {
-    from {
-      stroke-dashoffset: 40;
-    }
-    to {
-      stroke-dashoffset: 0;
-    }
-  }
-
-  @keyframes fadein {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
 }
