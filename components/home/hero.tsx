@@ -12,7 +12,7 @@ interface HeroProps {
 }
 
 const CARD_STYLES = [
-  "top-0 left-0 z-[3] -rotate-6 animate-[bob_6.5s_ease-in-out_infinite]",
+  "top-6 left-0 z-[3] -rotate-6 animate-[bob_6.5s_ease-in-out_infinite]",
   "top-[28%] right-0 z-[2] rotate-4 animate-[bob_7.5s_ease-in-out_infinite_-2s]",
   "bottom-0 left-[18%] z-[1] -rotate-3 animate-[bob_8.2s_ease-in-out_infinite_-4s]",
 ];
