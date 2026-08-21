@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { toNumber } from "@/lib/decimal";
-import { sendOrderConfirmationEmail } from "@/lib/email/notifications";
+import { sendOrderConfirmationEmail, sendNewOrderAlertEmail } from "@/lib/email/notifications";
 
 export type FinalizeResult =
   | { status: "finalized"; orderId: string }
@@ -89,24 +89,37 @@ export async function finalizeSucceededPayment(
     }
   });
 
+  const itemsWithVariant = order.items.map((item) => {
+    const details = item.variantDetailsSnapshot as { size?: string; color?: string } | null;
+    return {
+      name: item.productNameSnapshot,
+      size: details?.size ?? "",
+      color: details?.color ?? "",
+      quantity: item.quantity,
+      subtotal: toNumber(item.subtotal),
+    };
+  });
+
   if (order.customerEmail) {
     await sendOrderConfirmationEmail({
       to: order.customerEmail,
       orderNumber: order.orderNumber,
-      items: order.items.map((item) => {
-        const details = item.variantDetailsSnapshot as { size?: string; color?: string } | null;
-        return {
-          name: item.productNameSnapshot,
-          size: details?.size ?? "",
-          color: details?.color ?? "",
-          quantity: item.quantity,
-          subtotal: toNumber(item.subtotal),
-        };
-      }),
+      items: itemsWithVariant,
       totalAmount: toNumber(order.totalAmount),
       shippingAddress: order.shippingAddress,
     });
   }
+
+  // Independent of the customer email above — a no-op if
+  // ADMIN_NOTIFICATION_EMAIL isn't configured, so it never blocks or
+  // delays order confirmation for the customer.
+  await sendNewOrderAlertEmail({
+    orderId: order.id,
+    orderNumber: order.orderNumber,
+    customerEmail: order.customerEmail,
+    totalAmount: toNumber(order.totalAmount),
+    items: itemsWithVariant,
+  });
 
   return { status: "finalized", orderId: order.id };
 }
