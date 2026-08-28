@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { ChevronDown } from "lucide-react";
 import {
   Sheet,
@@ -30,7 +31,9 @@ function MobileMenu({ open, onOpenChange, user, categories }: MobileMenuProps) {
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="left" className="p-0">
         <SheetHeader>
-          <SheetTitle>BuyNest</SheetTitle>
+          <SheetTitle className="block">
+            <Image src="/logo.png" alt="BuyNest" width={137} height={75} className="h-9 w-auto" />
+          </SheetTitle>
         </SheetHeader>
 
         <nav className="flex-1 overflow-y-auto px-5 py-4">
