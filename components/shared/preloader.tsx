@@ -31,12 +31,12 @@ function Preloader() {
     <div
       aria-hidden="true"
       className={cn(
-        "fixed inset-0 z-[100] flex items-center justify-center bg-canvas transition-opacity duration-500 ease-out",
+        "fixed inset-0 z-100 flex items-center justify-center bg-canvas transition-opacity duration-500 ease-out",
         visible ? "opacity-100" : "pointer-events-none opacity-0",
       )}
     >
       <Image
-        src="/logo.png"
+        src="/logo-mark.png"
         alt=""
         width={137}
         height={75}

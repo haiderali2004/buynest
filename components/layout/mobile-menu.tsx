@@ -32,7 +32,13 @@ function MobileMenu({ open, onOpenChange, user, categories }: MobileMenuProps) {
       <SheetContent side="left" className="p-0">
         <SheetHeader>
           <SheetTitle className="block">
-            <Image src="/logo.png" alt="BuyNest" width={137} height={75} className="h-9 w-auto" />
+            <Image
+              src="/logo-mark.png"
+              alt="BuyNest"
+              width={137}
+              height={75}
+              className="h-9 w-auto"
+            />
           </SheetTitle>
         </SheetHeader>
 
