@@ -22,7 +22,7 @@ export const emptyAddress: AddressFormValue = {
   city: "",
   state: "",
   postalCode: "",
-  country: "India",
+  country: "Pakistan",
 };
 
 interface AddressFieldsProps {

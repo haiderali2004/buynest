@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { EB_Garamond, Manrope, Geist_Mono } from "next/font/google";
+import NextTopLoader from "nextjs-toploader";
 import "@/app/globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthListener } from "@/components/shared/auth-listener";
 import { PageViewTracker } from "@/components/shared/page-view-tracker";
 import { Preloader } from "@/components/shared/preloader";
-import { ScrollProgress } from "@/components/shared/scroll-progress";
 import { BackToTop } from "@/components/shared/back-to-top";
 
 const ebGaramond = EB_Garamond({
@@ -48,8 +48,14 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       className={`${ebGaramond.variable} ${manrope.variable} ${geistMono.variable}`}
     >
       <body className="bg-canvas font-sans text-foreground antialiased">
+        <NextTopLoader
+          color="#24433A"
+          height={3}
+          shadow={false}
+          showSpinner={false}
+          easing="ease"
+        />
         <Preloader />
-        <ScrollProgress />
         {children}
         <BackToTop />
         <Toaster />

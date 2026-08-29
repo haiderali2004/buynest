@@ -119,6 +119,21 @@
     outline-offset: 2px;
   }
 
+  /* Instant tactile feedback the moment something is tapped — before
+     whatever it triggers (navigation, a request) has had any time to
+     finish, so a press never looks like it didn't register. Applies
+     site-wide by targeting the bare elements rather than a utility
+     class, so nothing needs updating component-by-component; anything
+     with its own more specific hover/active transform still wins. */
+  a:active,
+  button:not(:disabled):active {
+    transform: scale(0.98);
+    opacity: 0.85;
+    transition:
+      transform 0.1s ease,
+      opacity 0.1s ease;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     *,
     *::before,

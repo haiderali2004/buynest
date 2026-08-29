@@ -37,7 +37,7 @@ function MobileMenu({ open, onOpenChange, user, categories }: MobileMenuProps) {
               alt="BuyNest"
               width={137}
               height={75}
-              className="h-9 w-auto"
+              className="h-13 w-auto"
             />
           </SheetTitle>
         </SheetHeader>
