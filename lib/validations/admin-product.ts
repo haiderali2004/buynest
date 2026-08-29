@@ -13,6 +13,10 @@ export const adminVariantSchema = z.object({
 export const adminImageSchema = z.object({
   url: z.string().min(1, "Image URL is required").max(500),
   isPrimary: z.boolean(),
+  /** Ties this image to every variant of this color, so the product page
+   *  swaps to it when a shopper picks that color. Absent/empty means the
+   *  image is generic — shown regardless of which variant is selected. */
+  color: z.string().max(40).optional(),
 });
 
 export const adminProductSchema = z.object({
@@ -26,6 +30,7 @@ export const adminProductSchema = z.object({
   categoryId: z.string().uuid().optional(),
   material: z.string().max(200).optional(),
   careInstructions: z.string().max(500).optional(),
+  kitContents: z.string().max(2000).optional(),
   basePrice: z.number().min(0, "Price can't be negative"),
   compareAtPrice: z.number().min(0).optional(),
   isActive: z.boolean(),

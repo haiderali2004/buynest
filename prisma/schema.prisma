@@ -70,6 +70,14 @@ enum PaymentStatus {
   @@map("payment_status")
 }
 
+enum PaymentMethod {
+  card
+  cod
+  manual_wallet
+
+  @@map("payment_method")
+}
+
 enum DiscountType {
   percentage
   fixed_amount
@@ -178,6 +186,9 @@ model Product {
   sku              String?        @unique
   material         String?
   careInstructions String?        @map("care_instructions")
+  /** One item per line — for kits/bundles with multiple pieces. Null/empty
+   *  means this product has no separate "what's included" list. */
+  kitContents      String?        @map("kit_contents")
   isActive         Boolean        @default(true) @map("is_active")
   isFeatured       Boolean        @default(false) @map("is_featured")
   metaTitle        String?        @map("meta_title")
@@ -324,6 +335,10 @@ model Order {
   userId              String        @map("user_id") @db.Uuid
   status              OrderStatus   @default(pending)
   paymentStatus       PaymentStatus @default(unpaid) @map("payment_status")
+  paymentMethod       PaymentMethod @default(card) @map("payment_method")
+  /** Customer-uploaded screenshot proving a JazzCash/EasyPaisa transfer —
+   *  only set for paymentMethod = manual_wallet, awaiting admin review. */
+  paymentProofUrl     String?       @map("payment_proof_url")
   subtotal            Decimal       @default(0) @db.Decimal(10, 2)
   discountAmount      Decimal       @default(0) @map("discount_amount") @db.Decimal(10, 2)
   shippingAmount      Decimal       @default(0) @map("shipping_amount") @db.Decimal(10, 2)

@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Upload } from "lucide-react";
+import { Upload, Eye, EyeOff } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -22,6 +22,18 @@ interface ImageUploadFieldProps {
 function ImageUploadField({ id, label, value, onChange }: ImageUploadFieldProps) {
   const [uploading, setUploading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
+  const [showPreview, setShowPreview] = React.useState(false);
+  const [previewFailed, setPreviewFailed] = React.useState(false);
+
+  // Reset the "couldn't load" state whenever the URL itself changes, so
+  // switching to a different/corrected URL gets a fresh attempt instead of
+  // staying stuck on the previous URL's failure. Adjusting state during
+  // render (rather than an effect) to avoid an extra render pass.
+  const [previewedValue, setPreviewedValue] = React.useState(value);
+  if (previewedValue !== value) {
+    setPreviewedValue(value);
+    if (previewFailed) setPreviewFailed(false);
+  }
 
   async function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
@@ -78,8 +90,36 @@ function ImageUploadField({ id, label, value, onChange }: ImageUploadFieldProps)
             className="hidden"
           />
         </label>
+        <button
+          type="button"
+          onClick={() => setShowPreview((current) => !current)}
+          disabled={!value}
+          aria-label={showPreview ? "Hide preview" : "Preview image"}
+          aria-pressed={showPreview}
+          className="flex shrink-0 items-center justify-center border border-input bg-paper px-3 text-foreground hover:bg-secondary disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-paper"
+        >
+          {showPreview ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+        </button>
       </div>
       {error && <p className="mt-1 text-xs text-clay">{error}</p>}
+
+      {showPreview && value && (
+        <div className="mt-2 border border-border bg-secondary p-2">
+          {previewFailed ? (
+            <p className="py-4 text-center text-xs text-clay">
+              Couldn&rsquo;t load that URL as an image.
+            </p>
+          ) : (
+            // eslint-disable-next-line @next/next/no-img-element -- previewing an arbitrary admin-entered URL, not a local/optimizable asset
+            <img
+              src={value}
+              alt="Preview"
+              className="mx-auto max-h-48 w-auto object-contain"
+              onError={() => setPreviewFailed(true)}
+            />
+          )}
+        </div>
+      )}
     </div>
   );
 }

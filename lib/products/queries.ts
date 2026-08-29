@@ -270,6 +270,45 @@ export async function getCatalogStats(): Promise<CatalogStats> {
   return { categoryCount, productCount };
 }
 
+export interface CategoryWithCount {
+  name: string;
+  slug: string;
+  description: string | null;
+  imageUrl: string | null;
+  productCount: number;
+}
+
+/** Top-level categories with a live count of active products, for the home page Departments section. */
+export async function getCategoriesWithCounts(): Promise<CategoryWithCount[]> {
+  const categories: Array<{
+    name: string;
+    slug: string;
+    description: string | null;
+    imageUrl: string | null;
+    _count: { products: number };
+  }> = await prisma.category.findMany({
+    where: { isActive: true, parentId: null },
+    orderBy: { displayOrder: "asc" },
+    select: {
+      name: true,
+      slug: true,
+      description: true,
+      imageUrl: true,
+      _count: { select: { products: { where: { isActive: true } } } },
+    },
+  });
+
+  return categories
+    .map((category) => ({
+      name: category.name,
+      slug: category.slug,
+      description: category.description,
+      imageUrl: category.imageUrl,
+      productCount: category._count.products,
+    }))
+    .filter((category) => category.productCount > 0);
+}
+
 export interface ProductFilterFacets {
   categories: Array<{ name: string; slug: string }>;
   sizes: string[];
@@ -325,10 +364,11 @@ export interface ProductDetailData {
   compareAtPrice: number | null;
   material: string | null;
   careInstructions: string | null;
+  kitContents: string | null;
   avgRating: number;
   reviewCount: number;
   category: { name: string; slug: string } | null;
-  images: Array<{ id: string; url: string; altText: string | null }>;
+  images: Array<{ id: string; url: string; altText: string | null; variantColor: string | null }>;
   variants: ProductDetailVariant[];
 }
 
@@ -343,10 +383,16 @@ export async function getProductBySlug(slug: string): Promise<ProductDetailData 
     compareAtPrice: unknown;
     material: string | null;
     careInstructions: string | null;
+    kitContents: string | null;
     avgRating: unknown;
     reviewCount: number;
     category: { name: string; slug: string } | null;
-    images: Array<{ id: string; url: string; altText: string | null }>;
+    images: Array<{
+      id: string;
+      url: string;
+      altText: string | null;
+      variant: { color: string } | null;
+    }>;
     variants: Array<{
       id: string;
       size: string;
@@ -359,7 +405,10 @@ export async function getProductBySlug(slug: string): Promise<ProductDetailData 
     where: { slug, isActive: true },
     include: {
       category: { select: { name: true, slug: true } },
-      images: { orderBy: { displayOrder: "asc" } },
+      images: {
+        orderBy: { displayOrder: "asc" },
+        include: { variant: { select: { color: true } } },
+      },
       variants: true,
     },
   });
@@ -378,10 +427,16 @@ export async function getProductBySlug(slug: string): Promise<ProductDetailData 
     compareAtPrice: product.compareAtPrice ? toNumber(product.compareAtPrice) : null,
     material: product.material,
     careInstructions: product.careInstructions,
+    kitContents: product.kitContents,
     avgRating: toNumber(product.avgRating),
     reviewCount: product.reviewCount,
     category: product.category,
-    images: product.images,
+    images: product.images.map((image) => ({
+      id: image.id,
+      url: image.url,
+      altText: image.altText,
+      variantColor: image.variant?.color ?? null,
+    })),
     variants: sortSizes([...new Set(product.variants.map((v) => v.size))]).flatMap((size) =>
       product.variants
         .filter((v) => v.size === size)

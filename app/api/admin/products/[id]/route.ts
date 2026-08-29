@@ -45,6 +45,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
           categoryId: input.categoryId || null,
           material: input.material || null,
           careInstructions: input.careInstructions || null,
+          kitContents: input.kitContents || null,
           basePrice: input.basePrice,
           compareAtPrice: input.compareAtPrice ?? null,
           isActive: input.isActive,
@@ -77,6 +78,14 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
         });
       }
 
+      // The full, current variant list (existing + just-created) — needed
+      // to resolve each image's color to a real variant id to link to.
+      const currentVariants = await tx.productVariant.findMany({
+        where: { productId: id },
+        select: { id: true, color: true },
+      });
+      const colorToVariantId = new Map(currentVariants.map((v) => [v.color, v.id]));
+
       // Images have no other table pointing at them by id, so the simplest
       // correct sync is to replace the whole set rather than diff it.
       await tx.productImage.deleteMany({ where: { productId: id } });
@@ -87,6 +96,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
           altText: input.name,
           isPrimary: image.isPrimary,
           displayOrder: index,
+          variantId: image.color ? (colorToVariantId.get(image.color) ?? null) : null,
         })),
       });
     });

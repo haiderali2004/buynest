@@ -14,6 +14,9 @@ interface AddToCartPanelProps {
   productSlug: string;
   image: string | null;
   variants: ProductDetailVariant[];
+  /** Called whenever the selected color changes, so a parent (e.g. the
+   *  gallery) can react — null means no color is currently selected. */
+  onColorChange?: (color: string | null) => void;
 }
 
 function AddToCartPanel({
@@ -22,6 +25,7 @@ function AddToCartPanel({
   productSlug,
   image,
   variants,
+  onColorChange,
 }: AddToCartPanelProps) {
   const addItem = useCartStore((state) => state.addItem);
 
@@ -48,6 +52,10 @@ function AddToCartPanel({
 
   const selectedVariant =
     variants.find((v) => v.size === selectedSize && v.color === selectedColor) ?? null;
+
+  React.useEffect(() => {
+    onColorChange?.(selectedColor);
+  }, [selectedColor, onColorChange]);
 
   function handleAddToCart() {
     if (!selectedVariant) return;

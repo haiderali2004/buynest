@@ -31,39 +31,54 @@ export async function POST(request: Request) {
   const input = parsed.data;
 
   try {
-    const product = await prisma.product.create({
-      data: {
-        name: input.name,
-        slug: input.slug,
-        description: input.description,
-        categoryId: input.categoryId || null,
-        material: input.material || null,
-        careInstructions: input.careInstructions || null,
-        basePrice: input.basePrice,
-        compareAtPrice: input.compareAtPrice ?? null,
-        isActive: input.isActive,
-        variants: {
-          create: input.variants.map((variant) => ({
-            size: variant.size,
-            color: variant.color,
-            colorHex: variant.colorHex || null,
-            stockQuantity: variant.stockQuantity,
-            priceOverride: variant.priceOverride ?? null,
-          })),
+    // Two steps rather than one nested create: an image needs the *real*
+    // id of a just-created variant to link to (matched by color), and
+    // Prisma can't hand that back within the same nested-create call.
+    const productId = await prisma.$transaction(async (tx) => {
+      const product = await tx.product.create({
+        data: {
+          name: input.name,
+          slug: input.slug,
+          description: input.description,
+          categoryId: input.categoryId || null,
+          material: input.material || null,
+          careInstructions: input.careInstructions || null,
+          kitContents: input.kitContents || null,
+          basePrice: input.basePrice,
+          compareAtPrice: input.compareAtPrice ?? null,
+          isActive: input.isActive,
+          variants: {
+            create: input.variants.map((variant) => ({
+              size: variant.size,
+              color: variant.color,
+              colorHex: variant.colorHex || null,
+              stockQuantity: variant.stockQuantity,
+              priceOverride: variant.priceOverride ?? null,
+            })),
+          },
         },
-        images: {
-          create: input.images.map((image, index) => ({
-            url: image.url,
-            altText: input.name,
-            isPrimary: image.isPrimary,
-            displayOrder: index,
-          })),
-        },
-      },
-      select: { id: true },
+        select: { id: true, variants: { select: { id: true, color: true } } },
+      });
+
+      // First variant of each color — enough to key off, since the display
+      // side matches by the variant's *color*, not this exact variant id.
+      const colorToVariantId = new Map(product.variants.map((v) => [v.color, v.id]));
+
+      await tx.productImage.createMany({
+        data: input.images.map((image, index) => ({
+          productId: product.id,
+          url: image.url,
+          altText: input.name,
+          isPrimary: image.isPrimary,
+          displayOrder: index,
+          variantId: image.color ? (colorToVariantId.get(image.color) ?? null) : null,
+        })),
+      });
+
+      return product.id;
     });
 
-    return NextResponse.json({ id: product.id }, { status: 201 });
+    return NextResponse.json({ id: productId }, { status: 201 });
   } catch (error) {
     console.error("[admin/products] create failed", error);
     return NextResponse.json(

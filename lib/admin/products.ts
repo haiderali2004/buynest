@@ -65,6 +65,8 @@ export interface AdminImageDetail {
   id: string;
   url: string;
   isPrimary: boolean;
+  /** The color variant this image is tied to, if any — null means generic. */
+  color: string | null;
 }
 
 export interface AdminProductDetail {
@@ -76,6 +78,7 @@ export interface AdminProductDetail {
   compareAtPrice: number | null;
   material: string | null;
   careInstructions: string | null;
+  kitContents: string | null;
   isActive: boolean;
   categoryId: string | null;
   images: AdminImageDetail[];
@@ -92,9 +95,16 @@ export async function getAdminProductById(id: string): Promise<AdminProductDetai
     compareAtPrice: unknown;
     material: string | null;
     careInstructions: string | null;
+    kitContents: string | null;
     isActive: boolean;
     categoryId: string | null;
-    images: Array<{ id: string; url: string; isPrimary: boolean; displayOrder: number }>;
+    images: Array<{
+      id: string;
+      url: string;
+      isPrimary: boolean;
+      displayOrder: number;
+      variant: { color: string } | null;
+    }>;
     variants: Array<{
       id: string;
       size: string;
@@ -105,7 +115,13 @@ export async function getAdminProductById(id: string): Promise<AdminProductDetai
     }>;
   } | null = await prisma.product.findUnique({
     where: { id },
-    include: { images: { orderBy: { displayOrder: "asc" } }, variants: true },
+    include: {
+      images: {
+        orderBy: { displayOrder: "asc" },
+        include: { variant: { select: { color: true } } },
+      },
+      variants: true,
+    },
   });
 
   if (!product) return null;
@@ -119,12 +135,14 @@ export async function getAdminProductById(id: string): Promise<AdminProductDetai
     compareAtPrice: product.compareAtPrice ? toNumber(product.compareAtPrice) : null,
     material: product.material,
     careInstructions: product.careInstructions,
+    kitContents: product.kitContents,
     isActive: product.isActive,
     categoryId: product.categoryId,
     images: product.images.map((image) => ({
       id: image.id,
       url: image.url,
       isPrimary: image.isPrimary,
+      color: image.variant?.color ?? null,
     })),
     variants: product.variants.map((variant) => ({
       id: variant.id,

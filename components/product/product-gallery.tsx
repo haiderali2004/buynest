@@ -10,10 +10,30 @@ interface GalleryImage {
   id: string;
   url: string;
   altText: string | null;
+  variantColor?: string | null;
 }
 
-function ProductGallery({ images, productName }: { images: GalleryImage[]; productName: string }) {
+interface ProductGalleryProps {
+  images: GalleryImage[];
+  productName: string;
+  /** Jumps the gallery to whichever image is tagged with this color, if any. */
+  selectedColor?: string | null;
+}
+
+function ProductGallery({ images, productName, selectedColor }: ProductGalleryProps) {
   const [activeIndex, setActiveIndex] = React.useState(0);
+
+  // Adjusted during render rather than synced via an effect (same pattern
+  // AddToCartPanel uses) — tracks the last color we already reacted to, so
+  // a genuine new color pick jumps the gallery exactly once, without
+  // fighting the user's own manual prev/next/thumbnail navigation
+  // afterward.
+  const [respondedToColor, setRespondedToColor] = React.useState(selectedColor ?? null);
+  if (selectedColor && selectedColor !== respondedToColor) {
+    setRespondedToColor(selectedColor);
+    const matchIndex = images.findIndex((image) => image.variantColor === selectedColor);
+    if (matchIndex !== -1) setActiveIndex(matchIndex);
+  }
 
   if (images.length === 0) {
     return (
