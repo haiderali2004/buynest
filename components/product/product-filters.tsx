@@ -88,7 +88,7 @@ function FilterContent({
       )}
 
       <div>
-        <p className="font-mono text-xs tracking-wider text-muted-foreground uppercase">Category</p>
+        <p className="font-mono text-xs font-bold tracking-wider text-foreground uppercase">Category</p>
         <ul className="mt-3 flex flex-col gap-2">
           <li>
             <button
@@ -125,7 +125,7 @@ function FilterContent({
 
       {facets.sizes.length > 0 && (
         <div>
-          <p className="font-mono text-xs tracking-wider text-muted-foreground uppercase">Size</p>
+          <p className="font-mono text-xs font-bold tracking-wider text-foreground uppercase">Size</p>
           <div className="mt-3 flex flex-wrap gap-2">
             {facets.sizes.map((size) => {
               const active = currentSizes.includes(size);
@@ -135,7 +135,7 @@ function FilterContent({
                   type="button"
                   onClick={() => toggleMultiValue("size", size)}
                   className={cn(
-                    "flex h-9 min-w-9 items-center justify-center border px-2 font-mono text-xs",
+                    "flex h-9 min-w-9 items-center justify-center rounded-full border px-2 font-mono text-xs",
                     active
                       ? "border-bottle bg-bottle text-paper"
                       : "border-border text-foreground hover:border-bottle",
@@ -151,7 +151,7 @@ function FilterContent({
 
       {facets.colors.length > 0 && (
         <div>
-          <p className="font-mono text-xs tracking-wider text-muted-foreground uppercase">Color</p>
+          <p className="font-mono text-xs font-bold tracking-wider text-foreground uppercase">Color</p>
           <div className="mt-3 flex flex-wrap gap-2">
             {facets.colors.map((color) => {
               const active = currentColors.includes(color);
@@ -161,7 +161,7 @@ function FilterContent({
                   type="button"
                   onClick={() => toggleMultiValue("color", color)}
                   className={cn(
-                    "border px-3 py-1.5 font-mono text-xs",
+                    "rounded-full border px-3 py-1.5 font-mono text-xs",
                     active
                       ? "border-bottle bg-bottle text-paper"
                       : "border-border text-foreground hover:border-bottle",
@@ -178,7 +178,7 @@ function FilterContent({
       <Separator />
 
       <form onSubmit={applyPriceRange}>
-        <p className="font-mono text-xs tracking-wider text-muted-foreground uppercase">
+        <p className="font-mono text-xs font-bold tracking-wider text-foreground uppercase">
           Price (Rs)
         </p>
         <div className="mt-3 flex items-center gap-2">
@@ -188,7 +188,7 @@ function FilterContent({
             placeholder="Min"
             value={minPrice}
             onChange={(event) => setMinPrice(event.target.value)}
-            className="h-9 text-sm"
+            className="h-9 rounded-full text-sm"
           />
           <span className="text-muted-foreground">–</span>
           <Input
@@ -197,10 +197,10 @@ function FilterContent({
             placeholder="Max"
             value={maxPrice}
             onChange={(event) => setMaxPrice(event.target.value)}
-            className="h-9 text-sm"
+            className="h-9 rounded-full text-sm"
           />
         </div>
-        <Button type="submit" variant="outline" size="sm" className="mt-3 w-full">
+        <Button type="submit" variant="outline" size="sm" className="mt-3 w-full rounded-full">
           Apply
         </Button>
       </form>

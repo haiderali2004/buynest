@@ -27,20 +27,24 @@ function CatalogView({
   hideSortSelect = false,
 }: CatalogViewProps) {
   return (
-    <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-      <h1 className="font-display text-3xl text-foreground">{title}</h1>
+    <div className="mx-auto max-w-7xl px-4 pt-3.75 pb-10 sm:px-6 lg:px-8">
+      <h1 className="font-display text-[25.2px] font-semibold text-foreground sm:text-[33.6px]">
+        {title}
+      </h1>
       <p className="mt-1 text-sm text-muted-foreground">
         {total} item{total === 1 ? "" : "s"}
       </p>
 
-      <div className="mt-8 grid grid-cols-1 gap-10 lg:grid-cols-[240px_1fr]">
-        <Suspense>
-          <ProductFilters facets={facets} />
-        </Suspense>
+      <div className="grid grid-cols-1 gap-10 lg:grid-cols-[240px_1fr]">
+        <div className="mt-8">
+          <Suspense>
+            <ProductFilters facets={facets} />
+          </Suspense>
+        </div>
 
-        <div>
+        <div className="mt-2">
           {!hideSortSelect && (
-            <div className="mb-6 flex justify-end">
+            <div className="mb-2 flex justify-end">
               <Suspense>
                 <SortSelect />
               </Suspense>
