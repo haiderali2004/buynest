@@ -7,6 +7,12 @@ export interface NewOrderAlertEmailProps {
   customerEmail: string | null;
   totalAmount: string;
   items: Array<{ name: string; size: string; color: string; quantity: number }>;
+  /** Overrides the default "was just paid" line — for COD / manual-wallet
+   * orders, which reach the admin at different points in their lifecycle. */
+  headline?: string;
+  /** When set (payment proof just submitted for a manual_wallet order),
+   * renders a second button linking straight to the screenshot. */
+  proofUrl?: string;
 }
 
 function NewOrderAlertEmail({
@@ -15,6 +21,8 @@ function NewOrderAlertEmail({
   customerEmail,
   totalAmount,
   items,
+  headline,
+  proofUrl,
 }: NewOrderAlertEmailProps) {
   return (
     <EmailLayout previewText={`New order ${orderNumber} — ${totalAmount}`}>
@@ -22,7 +30,7 @@ function NewOrderAlertEmail({
         NEW ORDER
       </Text>
       <Text style={{ fontSize: "16px", color: "#1C1B17", margin: "0 0 24px" }}>
-        <strong>{orderNumber}</strong> was just paid — time to pack it up.
+        <strong>{orderNumber}</strong> {headline ?? "was just paid — time to pack it up."}
       </Text>
 
       {items.map((item, index) => (
@@ -73,6 +81,21 @@ function NewOrderAlertEmail({
         >
           View order in admin
         </Button>
+        {proofUrl && (
+          <Button
+            href={proofUrl}
+            style={{
+              backgroundColor: "transparent",
+              color: "#24433A",
+              border: "1px solid #24433A",
+              padding: "12px 20px",
+              fontSize: "14px",
+              marginLeft: "12px",
+            }}
+          >
+            View screenshot
+          </Button>
+        )}
       </Section>
     </EmailLayout>
   );

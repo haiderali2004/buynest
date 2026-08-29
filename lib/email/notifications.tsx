@@ -42,14 +42,20 @@ export interface NewOrderAlertInput {
   customerEmail: string | null;
   totalAmount: number;
   items: Array<{ name: string; size: string; color: string; quantity: number }>;
+  /** Overrides the default "was just paid" line — used for COD (placed,
+   * not paid) and manual-wallet (proof submitted, needs verification). */
+  headline?: string;
+  proofUrl?: string;
 }
 
 /**
- * Tells the store owner a paid order needs fulfilling. A no-op if
- * ADMIN_NOTIFICATION_EMAIL isn't set — this is an optional convenience on
- * top of checking the /admin/orders dashboard directly, not something the
- * order flow depends on, so a missing address just means "no alert" rather
- * than an error.
+ * Tells the store owner an order needs their attention — either a paid
+ * card order to fulfill, a COD order that was just placed, or a
+ * manual-wallet order whose payment proof needs manual verification. A
+ * no-op if ADMIN_NOTIFICATION_EMAIL isn't set — this is an optional
+ * convenience on top of checking the /admin/orders dashboard directly, not
+ * something the order flow depends on, so a missing address just means "no
+ * alert" rather than an error.
  */
 export async function sendNewOrderAlertEmail(input: NewOrderAlertInput): Promise<void> {
   const adminEmail = process.env.ADMIN_NOTIFICATION_EMAIL;
@@ -67,6 +73,8 @@ export async function sendNewOrderAlertEmail(input: NewOrderAlertInput): Promise
         customerEmail={input.customerEmail}
         totalAmount={formatPrice(input.totalAmount)}
         items={input.items}
+        headline={input.headline}
+        proofUrl={input.proofUrl}
       />
     ),
   });

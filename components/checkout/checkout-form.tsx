@@ -8,7 +8,24 @@ import { Button } from "@/components/ui/button";
 import { OrderSummary } from "@/components/cart/order-summary";
 import { AddressFields, emptyAddress, type AddressFormValue } from "@/components/checkout/address-fields";
 import { SavedAddressPicker } from "@/components/checkout/saved-address-picker";
+import { cn } from "@/lib/utils";
 import type { AccountAddress } from "@/lib/account/addresses";
+
+type PaymentMethod = "cod" | "manual_wallet" | "card";
+
+const PAYMENT_METHODS: Array<{ value: PaymentMethod; label: string; helper: string }> = [
+  { value: "cod", label: "Cash on Delivery", helper: "Pay in cash when your order arrives." },
+  {
+    value: "manual_wallet",
+    label: "Pay via JazzCash / EasyPaisa",
+    helper: "Send payment to our account and upload a screenshot as proof.",
+  },
+  {
+    value: "card",
+    label: "Pay via Debit/Credit Card",
+    helper: "You'll enter your card details on Safepay's secure payment page.",
+  },
+];
 
 function savedAddressToFormValue(address: AccountAddress): AddressFormValue {
   return {
@@ -43,6 +60,7 @@ function CheckoutForm({ savedAddresses = [], defaultEmail = "" }: CheckoutFormPr
   );
   const [billingSameAsShipping, setBillingSameAsShipping] = React.useState(true);
   const [billing, setBilling] = React.useState<AddressFormValue>(emptyAddress);
+  const [paymentMethod, setPaymentMethod] = React.useState<PaymentMethod>("card");
   const [submitting, setSubmitting] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
 
@@ -72,6 +90,7 @@ function CheckoutForm({ savedAddresses = [], defaultEmail = "" }: CheckoutFormPr
           billingSameAsShipping,
           billingAddress: billingSameAsShipping ? undefined : billing,
           discountCode: discount?.code,
+          paymentMethod,
         }),
       });
 
@@ -83,9 +102,10 @@ function CheckoutForm({ savedAddresses = [], defaultEmail = "" }: CheckoutFormPr
         return;
       }
 
-      // Card details are entered entirely on Safepay's own hosted page —
-      // this app never sees raw card data. The customer comes back to
-      // /checkout/success once they've paid (or /checkout if they cancel).
+      // checkoutUrl points somewhere different per payment method: Safepay's
+      // hosted page for card (card details never touch this app), our own
+      // wallet-payment page for manual_wallet, or a plain confirmation page
+      // for COD — the server decides which, this just follows it.
       window.location.href = data.checkoutUrl;
     } catch {
       setError("Something went wrong. Please try again.");
@@ -162,14 +182,45 @@ function CheckoutForm({ savedAddresses = [], defaultEmail = "" }: CheckoutFormPr
               )}
             </section>
 
+            <section>
+              <h2 className="font-display text-xl text-foreground">Payment method</h2>
+              <div className="mt-4 flex flex-col gap-2.5">
+                {PAYMENT_METHODS.map((method) => (
+                  <label
+                    key={method.value}
+                    className={cn(
+                      "flex cursor-pointer items-start gap-3 border px-4 py-3 transition-colors",
+                      paymentMethod === method.value
+                        ? "border-bottle bg-secondary"
+                        : "border-border hover:border-line-strong",
+                    )}
+                  >
+                    <input
+                      type="radio"
+                      name="paymentMethod"
+                      value={method.value}
+                      checked={paymentMethod === method.value}
+                      onChange={() => setPaymentMethod(method.value)}
+                      className="mt-1 size-4 accent-bottle"
+                    />
+                    <span>
+                      <span className="block text-sm font-medium text-foreground">
+                        {method.label}
+                      </span>
+                      <span className="mt-0.5 block text-xs text-muted-foreground">
+                        {method.helper}
+                      </span>
+                    </span>
+                  </label>
+                ))}
+              </div>
+            </section>
+
             {error && <p className="text-sm text-clay">{error}</p>}
 
             <Button type="submit" size="lg" disabled={submitting}>
-              {submitting ? "Redirecting to secure payment…" : "Continue to payment"}
+              {submitting ? "Placing your order…" : "Continue to payment"}
             </Button>
-            <p className="font-mono text-xs text-muted-foreground">
-              You&rsquo;ll enter your card details on Safepay&rsquo;s secure payment page.
-            </p>
           </form>
         </div>
 

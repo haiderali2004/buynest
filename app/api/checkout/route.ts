@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import type { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { createClient } from "@/lib/supabase/server";
 import { createCheckoutSession } from "@/lib/payments/safepay";
@@ -11,6 +12,7 @@ import {
   computeOrderTotals,
   CheckoutError,
 } from "@/lib/orders/pricing";
+import { sendOrderConfirmationEmail, sendNewOrderAlertEmail } from "@/lib/email/notifications";
 
 export async function POST(request: Request) {
   const rateLimit = await checkRateLimit({
@@ -90,22 +92,26 @@ export async function POST(request: Request) {
     const totals = computeOrderTotals(subtotal, discount?.amount ?? 0);
 
     const billing = input.billingSameAsShipping ? input.shippingAddress : input.billingAddress!;
-    const reservationExpiresAt = new Date(Date.now() + 30 * 60 * 1000);
+    // Only a card payment has an online step that can time out — COD and
+    // manual wallet orders are committed the moment they're placed (there's
+    // nothing left to "complete" within a window), so their stock should
+    // never be auto-released the way an abandoned card checkout's is.
+    const reservationExpiresAt =
+      input.paymentMethod === "card" ? new Date(Date.now() + 30 * 60 * 1000) : null;
 
     const order: { id: string; orderNumber: string } = await prisma.$transaction(
       async (tx) => {
-        const shippingAddress = await tx.address.create({
-          data: { userId, ...toAddressRow(input.shippingAddress) },
-        });
+        const shippingAddress = await findOrCreateAddress(tx, userId, toAddressRow(input.shippingAddress));
 
         const billingAddress = input.billingSameAsShipping
           ? shippingAddress
-          : await tx.address.create({ data: { userId, ...toAddressRow(billing) } });
+          : await findOrCreateAddress(tx, userId, toAddressRow(billing));
 
         const createdOrder = await tx.order.create({
           data: {
             userId,
             customerEmail: input.email,
+            paymentMethod: input.paymentMethod,
             subtotal: totals.subtotal,
             discountAmount: totals.discountAmount,
             shippingAmount: totals.shippingAmount,
@@ -153,37 +159,87 @@ export async function POST(request: Request) {
       },
     );
 
-    // The Safepay call happens after the DB transaction commits — it's a
-    // network call to a third party and has no place inside a DB
-    // transaction. If it fails here, the order is left "pending" with no
-    // tracker attached; it's simply abandoned (same as any cart a shopper
-    // never pays for), so no compensating rollback is needed.
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+    let checkoutUrl: string;
 
-    // Deliberately no query string on these two URLs — Safepay's hosted
-    // checkout appends its own `?order_id=...&tracker=...` onto whatever
-    // redirect_url/cancel_url you give it, but does so with a plain string
-    // concat rather than a real URL merge. If our own URL already had a
-    // `?`, Safepay's redirect ends up with two `?`s in it (a genuinely
-    // invalid URL, confirmed against the real sandbox), and the extra
-    // params get mashed into the value of ours instead of parsing
-    // separately. The success page reads order_id/tracker from what
-    // Safepay appends instead, which uniquely identifies the order anyway.
-    const session = await createCheckoutSession({
-      amountPkr: totals.totalAmount,
-      orderId: order.id,
-      orderNumber: order.orderNumber,
-      returnUrl: `${siteUrl}/checkout/success`,
-      cancelUrl: `${siteUrl}/checkout`,
-    });
+    if (input.paymentMethod === "card") {
+      // The Safepay call happens after the DB transaction commits — it's a
+      // network call to a third party and has no place inside a DB
+      // transaction. If it fails here, the order is left "pending" with no
+      // tracker attached; it's simply abandoned (same as any cart a shopper
+      // never pays for), so no compensating rollback is needed.
+      //
+      // Deliberately no query string on these two URLs — Safepay's hosted
+      // checkout appends its own `?order_id=...&tracker=...` onto whatever
+      // redirect_url/cancel_url you give it, but does so with a plain string
+      // concat rather than a real URL merge. If our own URL already had a
+      // `?`, Safepay's redirect ends up with two `?`s in it (a genuinely
+      // invalid URL, confirmed against the real sandbox), and the extra
+      // params get mashed into the value of ours instead of parsing
+      // separately. The success page reads order_id/tracker from what
+      // Safepay appends instead, which uniquely identifies the order anyway.
+      const session = await createCheckoutSession({
+        amountPkr: totals.totalAmount,
+        orderId: order.id,
+        orderNumber: order.orderNumber,
+        returnUrl: `${siteUrl}/checkout/success`,
+        cancelUrl: `${siteUrl}/checkout`,
+      });
 
-    await prisma.order.update({
-      where: { id: order.id },
-      data: { safepayTrackerToken: session.trackerToken },
-    });
+      await prisma.order.update({
+        where: { id: order.id },
+        data: { safepayTrackerToken: session.trackerToken },
+      });
+
+      checkoutUrl = session.checkoutUrl;
+    } else if (input.paymentMethod === "manual_wallet") {
+      // No email here — the customer is redirected straight to the
+      // pay-wallet page with the same information an email would repeat,
+      // and there's nothing yet for the admin to act on until a proof
+      // screenshot is actually submitted (see the payment-proof route).
+      checkoutUrl = `${siteUrl}/checkout/pay-wallet?order=${order.id}`;
+    } else {
+      // COD has no online payment step to wait on — the order is placed
+      // for real the moment it's created, so it gets the same "confirmed"
+      // emails a card order only gets once Safepay finalizes it.
+      checkoutUrl = `${siteUrl}/checkout/confirmed?order=${order.id}`;
+
+      const itemsWithVariant = lineItems.map((item) => ({
+        name: item.productName,
+        size: item.size,
+        color: item.color,
+        quantity: item.quantity,
+        subtotal: item.lineSubtotal,
+      }));
+
+      // Best-effort — the order itself is already committed, so a failed
+      // send here shouldn't turn into a checkout error for the customer.
+      try {
+        await sendOrderConfirmationEmail({
+          to: input.email,
+          orderNumber: order.orderNumber,
+          items: itemsWithVariant,
+          totalAmount: totals.totalAmount,
+          shippingAddress: {
+            ...input.shippingAddress,
+            addressLine2: input.shippingAddress.addressLine2 || null,
+          },
+        });
+        await sendNewOrderAlertEmail({
+          orderId: order.id,
+          orderNumber: order.orderNumber,
+          customerEmail: input.email,
+          totalAmount: totals.totalAmount,
+          items: itemsWithVariant,
+          headline: "was just placed — cash on delivery, time to pack it up.",
+        });
+      } catch (error) {
+        console.error("[checkout] COD confirmation email failed", error);
+      }
+    }
 
     return NextResponse.json({
-      checkoutUrl: session.checkoutUrl,
+      checkoutUrl,
       orderId: order.id,
       orderNumber: order.orderNumber,
       totals,
@@ -210,6 +266,26 @@ export async function POST(request: Request) {
       { status: 500 },
     );
   }
+}
+
+/**
+ * Reuses an existing address for this customer if one already matches
+ * exactly, instead of always inserting a new row. Without this, every
+ * single checkout — including a repeat customer using the same address
+ * every time — permanently added another "Home" entry to their saved
+ * addresses (confirmed live: a customer who'd checked out a few times
+ * ended up with several identical-looking duplicates on this checkout
+ * page, since the Address model defaults `label` to "Home" and nothing
+ * ever deduplicated on insert).
+ */
+async function findOrCreateAddress(
+  tx: Prisma.TransactionClient,
+  userId: string,
+  data: ReturnType<typeof toAddressRow>,
+) {
+  const existing = await tx.address.findFirst({ where: { userId, ...data } });
+  if (existing) return existing;
+  return tx.address.create({ data: { userId, ...data } });
 }
 
 function toAddressRow(address: {

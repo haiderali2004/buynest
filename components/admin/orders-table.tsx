@@ -13,6 +13,12 @@ const STATUS_VARIANT: Record<string, "default" | "secondary" | "accent" | "destr
   refunded: "destructive",
 };
 
+const PAYMENT_METHOD_LABEL: Record<string, string> = {
+  card: "Card",
+  cod: "COD",
+  manual_wallet: "JazzCash/EasyPaisa",
+};
+
 function OrdersTable({ orders }: { orders: AdminOrderListItem[] }) {
   if (orders.length === 0) {
     return <p className="px-5 py-8 text-center text-sm text-muted-foreground">No orders yet.</p>;
@@ -27,6 +33,7 @@ function OrdersTable({ orders }: { orders: AdminOrderListItem[] }) {
             <th className="px-5 py-3">Customer</th>
             <th className="px-5 py-3">Status</th>
             <th className="px-5 py-3">Payment</th>
+            <th className="px-5 py-3">Method</th>
             <th className="px-5 py-3">Date</th>
             <th className="px-5 py-3 text-right">Total</th>
           </tr>
@@ -60,6 +67,9 @@ function OrdersTable({ orders }: { orders: AdminOrderListItem[] }) {
                 >
                   {order.paymentStatus}
                 </Badge>
+              </td>
+              <td className="px-5 py-3 text-xs text-muted-foreground">
+                {PAYMENT_METHOD_LABEL[order.paymentMethod] ?? order.paymentMethod}
               </td>
               <td className="px-5 py-3 font-mono text-xs text-muted-foreground">
                 {order.createdAt.toLocaleString("en-PK")}

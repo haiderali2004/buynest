@@ -2,8 +2,15 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getAdminOrderById } from "@/lib/admin/orders";
 import { OrderStatusForm } from "@/components/admin/order-status-form";
+import { ConfirmPaymentButton } from "@/components/admin/confirm-payment-button";
 import { Badge } from "@/components/ui/badge";
 import { formatPrice } from "@/lib/utils";
+
+const PAYMENT_METHOD_LABEL: Record<string, string> = {
+  card: "Debit/Credit Card (Safepay)",
+  cod: "Cash on Delivery",
+  manual_wallet: "JazzCash / EasyPaisa (manual)",
+};
 
 export async function generateMetadata({
   params,
@@ -107,6 +114,45 @@ export default async function AdminOrderDetailPage({
         </div>
 
         <div className="flex flex-col gap-6">
+          <div className="border border-border bg-paper p-5">
+            <p className="font-mono text-[11px] tracking-wider text-muted-foreground uppercase">
+              Payment
+            </p>
+            <p className="mt-2 text-sm text-foreground">
+              {PAYMENT_METHOD_LABEL[order.paymentMethod] ?? order.paymentMethod}
+            </p>
+
+            {order.paymentMethod === "manual_wallet" && (
+              <div className="mt-3">
+                {order.paymentProofUrl ? (
+                  <a
+                    href={order.paymentProofUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="block border border-border"
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element -- external Supabase Storage URL, not a local/optimizable asset */}
+                    <img
+                      src={order.paymentProofUrl}
+                      alt="Payment screenshot"
+                      className="max-h-64 w-full object-contain"
+                    />
+                  </a>
+                ) : (
+                  <p className="text-sm text-muted-foreground">
+                    No screenshot uploaded yet — customer hasn&rsquo;t submitted proof.
+                  </p>
+                )}
+              </div>
+            )}
+
+            {order.paymentMethod !== "card" && order.paymentStatus !== "paid" && (
+              <div className="mt-4">
+                <ConfirmPaymentButton orderId={order.id} paymentMethod={order.paymentMethod} />
+              </div>
+            )}
+          </div>
+
           <div className="border border-border bg-paper p-5">
             <p className="font-mono text-[11px] tracking-wider text-muted-foreground uppercase">
               Update status

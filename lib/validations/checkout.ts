@@ -16,6 +16,8 @@ export const addressInputSchema = z.object({
   country: z.string().min(1, "Country is required").max(100),
 });
 
+export const paymentMethodSchema = z.enum(["card", "cod", "manual_wallet"]);
+
 export const checkoutInputSchema = z
   .object({
     email: z.string().min(1, "Email is required").email("Enter a valid email address"),
@@ -23,6 +25,7 @@ export const checkoutInputSchema = z
     shippingAddress: addressInputSchema,
     billingSameAsShipping: z.boolean(),
     billingAddress: addressInputSchema.optional(),
+    paymentMethod: paymentMethodSchema.default("card"),
     discountCode: z
       .string()
       .trim()

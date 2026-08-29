@@ -6,6 +6,7 @@ export interface AdminOrderListItem {
   orderNumber: string;
   status: string;
   paymentStatus: string;
+  paymentMethod: string;
   totalAmount: number;
   createdAt: Date;
   customerName: string | null;
@@ -17,6 +18,7 @@ export async function getAdminOrders(): Promise<AdminOrderListItem[]> {
     orderNumber: string;
     status: string;
     paymentStatus: string;
+    paymentMethod: string;
     totalAmount: unknown;
     createdAt: Date;
     shippingAddress: { fullName: string } | null;
@@ -30,6 +32,7 @@ export async function getAdminOrders(): Promise<AdminOrderListItem[]> {
     orderNumber: order.orderNumber,
     status: order.status,
     paymentStatus: order.paymentStatus,
+    paymentMethod: order.paymentMethod,
     totalAmount: toNumber(order.totalAmount),
     createdAt: order.createdAt,
     customerName: order.shippingAddress?.fullName ?? null,
@@ -68,6 +71,8 @@ export interface AdminOrderDetail {
   orderNumber: string;
   status: string;
   paymentStatus: string;
+  paymentMethod: string;
+  paymentProofUrl: string | null;
   subtotal: number;
   discountAmount: number;
   shippingAmount: number;
@@ -89,6 +94,8 @@ export async function getAdminOrderById(id: string): Promise<AdminOrderDetail | 
     orderNumber: string;
     status: string;
     paymentStatus: string;
+    paymentMethod: string;
+    paymentProofUrl: string | null;
     subtotal: unknown;
     discountAmount: unknown;
     shippingAmount: unknown;
@@ -126,6 +133,8 @@ export async function getAdminOrderById(id: string): Promise<AdminOrderDetail | 
     orderNumber: order.orderNumber,
     status: order.status,
     paymentStatus: order.paymentStatus,
+    paymentMethod: order.paymentMethod,
+    paymentProofUrl: order.paymentProofUrl,
     subtotal: toNumber(order.subtotal),
     discountAmount: toNumber(order.discountAmount),
     shippingAmount: toNumber(order.shippingAmount),
