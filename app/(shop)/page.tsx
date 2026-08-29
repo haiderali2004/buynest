@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import {
   getFeaturedProducts,
+  getCategoriesWithCounts,
   getSpotlightProducts,
   getCatalogStats,
 } from "@/lib/products/queries";
@@ -18,8 +19,9 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const [featuredProducts, spotlightProducts, catalogStats] = await Promise.all([
+  const [featuredProducts, categories, spotlightProducts, catalogStats] = await Promise.all([
     getFeaturedProducts(6),
+    getCategoriesWithCounts(),
     getSpotlightProducts(2),
     getCatalogStats(),
   ]);
@@ -28,7 +30,7 @@ export default async function HomePage() {
     <>
       <Hero pinnedProducts={featuredProducts} />
       <ValueProps />
-      <Departments />
+      <Departments categories={categories.slice(0, 3)} />
       <FeaturedProducts products={featuredProducts.slice(0, 4)} />
       <Spotlight products={spotlightProducts} />
       <BrandStory stats={catalogStats} />
